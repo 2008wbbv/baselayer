@@ -55,8 +55,42 @@ function field(label, inner, note) {
     note ? `<span class="note">${esc(note)}</span>` : ""}</div>`;
 }
 
-const textInput = (act, value, placeholder = "", bad = false) =>
-  `<input type="text" data-act="${act}" value="${attr(value)}" placeholder="${attr(placeholder)}" class="${bad ? "bad" : ""}" spellcheck="false" autocomplete="off">`;
+const textInput = (act, value, placeholder = "", bad = false, list = null) =>
+  `<input type="text" data-act="${act}" value="${attr(value)}" placeholder="${attr(placeholder)}"
+    class="${bad ? "bad" : ""}" spellcheck="false" autocomplete="off"${list ? ` list="${attr(list)}"` : ""}>`;
+
+/** Suggestions the browser offers while still allowing anything to be typed. */
+const datalist = (id, values) =>
+  `<datalist id="${attr(id)}">${values.map((v) => `<option value="${attr(v)}"></option>`).join("")}</datalist>`;
+
+/**
+ * Every IANA zone the browser knows about, so the list is always current and
+ * costs nothing to ship. Older engines without the API get a small fallback.
+ */
+function timezones() {
+  try {
+    const all = Intl.supportedValuesOf("timeZone");
+    if (all?.length) return all;
+  } catch { /* fall through */ }
+  return ["Etc/UTC", "Europe/London", "Europe/Berlin", "Europe/Paris", "America/New_York",
+    "America/Chicago", "America/Denver", "America/Los_Angeles", "America/Sao_Paulo",
+    "Asia/Tokyo", "Asia/Shanghai", "Asia/Kolkata", "Australia/Sydney"];
+}
+
+const LOCALES = [
+  "en_US.UTF-8", "en_GB.UTF-8", "en_AU.UTF-8", "en_CA.UTF-8", "en_IE.UTF-8",
+  "de_DE.UTF-8", "fr_FR.UTF-8", "es_ES.UTF-8", "it_IT.UTF-8", "pt_BR.UTF-8", "pt_PT.UTF-8",
+  "nl_NL.UTF-8", "pl_PL.UTF-8", "sv_SE.UTF-8", "nb_NO.UTF-8", "da_DK.UTF-8", "fi_FI.UTF-8",
+  "cs_CZ.UTF-8", "hu_HU.UTF-8", "ro_RO.UTF-8", "tr_TR.UTF-8", "el_GR.UTF-8",
+  "ru_RU.UTF-8", "uk_UA.UTF-8", "ja_JP.UTF-8", "ko_KR.UTF-8", "zh_CN.UTF-8", "zh_TW.UTF-8",
+  "ar_EG.UTF-8", "he_IL.UTF-8", "hi_IN.UTF-8", "id_ID.UTF-8", "vi_VN.UTF-8", "th_TH.UTF-8",
+];
+
+const KEYMAPS = [
+  "us", "uk", "gb", "us-acentos", "dvorak", "colemak", "de", "de-latin1-nodeadkeys",
+  "fr", "fr-latin1", "es", "it", "pt-latin1", "br-abnt2", "nl", "pl", "se-latin1",
+  "no", "dk-latin1", "fi", "cz-lat2", "hu", "ro", "tr", "gr", "ru", "ua", "jp106", "ko",
+];
 
 const select = (act, options, current) =>
   `<select data-act="${act}">${options
@@ -88,6 +122,15 @@ export function stepStart(state, cat) {
       `<button class="btn" data-act="reset">Clear everything and start blank</button>`);
 }
 
+/** A zone the runtime actually knows. Unknown zones fail at rebuild time. */
+function tzValid(tz) {
+  if (!tz) return false;
+  try {
+    new Intl.DateTimeFormat("en", { timeZone: tz });
+    return true;
+  } catch { return false; }
+}
+
 export function stepBasics(state) {
   const m = state.meta;
   const badUser = !/^[a-z_][a-z0-9_-]*$/.test(m.username);
@@ -100,10 +143,16 @@ export function stepBasics(state) {
         ${field("Full name", textInput("meta.fullName", m.fullName, "optional"), "Shown on the login screen.")}
       </div>`)
     + section("Locale", null, null, `<div class="grid g3">
-        ${field("Time zone", textInput("meta.timezone", m.timezone, "Europe/London"), "An IANA name, e.g. America/New_York.")}
-        ${field("Locale", textInput("meta.locale", m.locale, "en_US.UTF-8"))}
-        ${field("Console keymap", textInput("meta.keymap", m.keymap, "us"), "Also used for the X11 layout.")}
-      </div>`)
+        ${field("Time zone", textInput("meta.timezone", m.timezone, "Europe/London", !tzValid(m.timezone), "tz-list"),
+          tzValid(m.timezone) ? "Start typing a city or region." : "Not a zone this browser recognises - check the spelling.")}
+        ${field("Locale", textInput("meta.locale", m.locale, "en_US.UTF-8", false, "locale-list"),
+          "Any glibc locale name.")}
+        ${field("Console keymap", textInput("meta.keymap", m.keymap, "us", false, "keymap-list"),
+          "Also used for the X11 layout.")}
+      </div>
+      ${datalist("tz-list", timezones())}
+      ${datalist("locale-list", LOCALES)}
+      ${datalist("keymap-list", KEYMAPS)}`)
     + section("Target", null,
       "The channel decides which nixpkgs your machine tracks. Options move between releases, and the generated config is adjusted to match whichever you pick.",
       `<div class="grid g3">
@@ -177,6 +226,24 @@ export function stepDesktop(state, cat) {
 
   const cur = des.find((d) => d.id === state.desktop);
   const dmOptions = cat.desktops.displayManagers;
+
+  const suckless = cur && cur.suckless
+    ? section("Your own build", null,
+        `${esc(cur.name)} and its tools read config.h when they are compiled, so patches and keybindings live in the source rather than in this config. Leave this off to get the stock nixpkgs builds.`,
+        switchRow("suckless", "fork", state.suckless?.fork,
+          "Build from my own fork",
+          "Overrides the source of dwm, st, dmenu and dwmblocks with repositories you control.")
+        + (state.suckless?.fork ? `<div class="grid g3" style="margin-top:10px">
+            ${field("GitHub owner", textInput("suckless.owner", state.suckless.owner || "", "your-github-user"),
+              "Your fork must keep the upstream repository names.")}
+            ${field("Revision", textInput("suckless.rev", state.suckless.rev || "master", "master"),
+              "Pin a commit rather than a branch so rebuilds stay reproducible.")}
+          </div>
+          <div class="notice info" style="margin-top:10px"><span class="ico">${svg("cog", { size: 17 })}</span>
+            <div><b>The first rebuild is meant to fail</b>
+            <p>The generated overlay uses <code>lib.fakeHash</code>. Nix will stop and print the
+            real hash for each repository - paste those in and rebuild again.</p></div></div>` : ""))
+    : "";
   const login = cur && cur.id !== "none"
     ? section("Login screen", null,
         `"Match the desktop" uses ${esc((dmOptions.find((x) => x.id === cur.dm) || { name: "the usual choice" }).name)} for ${esc(cur.name)}.`,
@@ -188,7 +255,7 @@ export function stepDesktop(state, cat) {
     : "";
 
   return head("Desktop", "One desktop environment or window manager. Everything else on the machine is unaffected by this choice.")
-    + body + login;
+    + body + suckless + login;
 }
 
 export function stepPackages(state, cat, view) {

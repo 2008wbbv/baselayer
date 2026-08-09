@@ -8,9 +8,9 @@ import { validate } from "./validate.js";
 import * as search from "./nixsearch.js";
 import * as share from "./share.js";
 import * as ui from "./ui.js";
-import { svg } from "./icons.js";
+import { svg, setLogos } from "./icons.js";
 
-const DATA_FILES = ["packages", "services", "desktops", "security", "hardware", "flakes", "bundles"];
+const DATA_FILES = ["packages", "services", "desktops", "security", "hardware", "flakes", "bundles", "logos"];
 const STORAGE_KEY = "baselayer.state.v1";
 
 let cat = null;
@@ -56,6 +56,7 @@ async function boot() {
     // The standalone single-file build inlines the catalog instead of fetching it.
     if (globalThis.__BASELAYER_DATA) cat = globalThis.__BASELAYER_DATA;
     else await loadCatalog();
+    setLogos(cat.logos?.icons);
   } catch (e) {
 
     $("#boot").innerHTML = `<div class="notice error" style="text-align:left">
@@ -276,12 +277,14 @@ document.addEventListener("click", (ev) => {
       break;
 
     case "theme": {
+      // light -> dark -> follow the system -> light
       const root = document.documentElement;
-      const now = root.getAttribute("data-theme");
-      const next = now === "dark" ? "light" : now === "light" ? null : "dark";
-      if (next) root.setAttribute("data-theme", next);
-      else root.removeAttribute("data-theme");
-      try { localStorage.setItem("baselayer.theme", next || ""); } catch { /* ignore */ }
+      const now = root.getAttribute("data-theme") || "system";
+      const next = { light: "dark", dark: "system", system: "light" }[now];
+      if (next === "system") root.removeAttribute("data-theme");
+      else root.setAttribute("data-theme", next);
+      try { localStorage.setItem("baselayer.theme", next === "system" ? "" : next); } catch { /* ignore */ }
+      toast(next === "system" ? "Following your system theme" : `${next[0].toUpperCase()}${next.slice(1)} theme`);
       break;
     }
 
@@ -418,11 +421,12 @@ document.addEventListener("change", (ev) => {
   if (act === "opt") { update(() => { state.opts[id] = el.checked; }); return; }
   if (act === "net") { update(() => { state.net[id] = el.checked; }); return; }
   if (act === "proxy") { update(() => { state.proxy[id] = el.checked; }); return; }
+  if (act === "suckless") { update(() => { state.suckless[id] = el.checked; }); return; }
   if (act === "toggle") {
     update(() => { state.toggles = { ...state.toggles, [id]: el.checked }; });
     return;
   }
-  if (act.startsWith("meta.") || act.startsWith("proxy.")) {
+  if (act.startsWith("meta.") || act.startsWith("proxy.") || act.startsWith("suckless.")) {
     // Text inputs are applied by the `input` handler as you type. Re-rendering
     // here as well would rebuild the form on blur and swallow the edit you were
     // part-way through making in the next field.
@@ -442,7 +446,7 @@ document.addEventListener("input", (ev) => {
 
   if (act === "search") { queueSearch(el.value); return; }
 
-  if (act.startsWith("meta.") || act.startsWith("proxy.")) {
+  if (act.startsWith("meta.") || act.startsWith("proxy.") || act.startsWith("suckless.")) {
     const [group, key] = act.split(".");
     state[group][key] = el.value;
     recompute();
@@ -552,10 +556,13 @@ document.addEventListener("keydown", (ev) => {
   }
 });
 
-// Restore the saved theme before first paint of the shell.
+// Light is the default appearance. The OS preference is not followed unless
+// the reader asks for it, so the page looks the same for everyone until then.
 try {
   const saved = localStorage.getItem("baselayer.theme");
-  if (saved) document.documentElement.setAttribute("data-theme", saved);
-} catch { /* ignore */ }
+  document.documentElement.setAttribute("data-theme", saved || "light");
+} catch {
+  document.documentElement.setAttribute("data-theme", "light");
+}
 
 boot();

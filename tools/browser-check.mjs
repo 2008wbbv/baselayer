@@ -232,6 +232,70 @@ if ((await page.locator("pre.code").textContent()).includes('networking.hostName
   ok("opening a share link restores the configuration");
 else bad("share link did not restore state");
 
+// --- locale pickers ----------------------------------------------------------
+await page.locator('#steps [data-act="step"][data-id="basics"]').click();
+await page.waitForTimeout(300);
+const tzCount = await page.evaluate(() => document.querySelectorAll("#tz-list option").length);
+if (tzCount > 100) ok(`${tzCount} time zones offered as suggestions`);
+else bad(`only ${tzCount} time zones in the picker`);
+await page.locator('[data-act="meta.timezone"]').fill("Nowhere/Fake");
+await page.waitForTimeout(200);
+await page.locator('#steps [data-act="step"][data-id="review"]').click();
+await page.waitForTimeout(300);
+if ((await page.locator("#main").textContent()).includes("Time zone is not recognised"))
+  ok("an invalid time zone is caught before rebuild");
+else bad("invalid time zone was not reported");
+await page.locator('#steps [data-act="step"][data-id="basics"]').click();
+await page.locator('[data-act="meta.timezone"]').fill("Europe/London");
+await page.waitForTimeout(200);
+
+// --- real logos --------------------------------------------------------------
+await page.locator('#steps [data-act="step"][data-id="packages"]').click();
+await page.waitForTimeout(400);
+const logoCounts = await page.evaluate(() => ({
+  mono: document.querySelectorAll('.tile svg path[d]:not([stroke])').length,
+  art: document.querySelectorAll(".tile.art svg").length,
+  glyph: document.querySelectorAll(".tile svg path[stroke], .tile svg[stroke]").length,
+}));
+if (logoCounts.mono + logoCounts.art > 40)
+  ok(`real logos render (${logoCounts.mono} monochrome, ${logoCounts.art} full-colour, ${logoCounts.glyph} glyph fallbacks)`);
+else bad(`only ${logoCounts.mono + logoCounts.art} real logos rendered`);
+
+// --- dwm and the suckless overlay --------------------------------------------
+await page.locator('#steps [data-act="step"][data-id="start"]').click();
+await page.waitForTimeout(300);
+await page.locator('[data-act="bundle"][data-id="suckless"]').click();
+await page.waitForTimeout(500);
+let dwmCfg = await page.locator("pre.code").textContent();
+if (dwmCfg.includes("services.xserver.windowManager.dwm.enable")) ok("suckless bundle selects dwm");
+else bad("dwm not enabled by the suckless bundle");
+if (dwmCfg.includes("services.xserver.displayManager.startx.enable")) ok("suckless bundle uses startx");
+else bad("startx not enabled by the suckless bundle");
+if (dwmCfg.includes("dwmblocks") && dwmCfg.includes("ncmpcpp") && dwmCfg.includes("neomutt"))
+  ok("the LARBS toolchain lands in systemPackages");
+else bad("LARBS packages missing from the config");
+
+await page.locator('#steps [data-act="step"][data-id="desktop"]').click();
+await page.waitForTimeout(300);
+await page.locator('[data-act="suckless"][data-id="fork"]').click();
+await page.waitForTimeout(300);
+await page.locator('[data-act="suckless.owner"]').fill("someuser");
+await page.waitForTimeout(400);
+dwmCfg = await page.locator("pre.code").textContent();
+if (dwmCfg.includes("nixpkgs.overlays") && dwmCfg.includes('owner = "someuser"') && dwmCfg.includes("lib.fakeHash"))
+  ok("the suckless overlay is generated from your fork");
+else bad("suckless overlay missing or wrong");
+
+// --- theme -------------------------------------------------------------------
+const initialTheme = await page.evaluate(() => document.documentElement.getAttribute("data-theme"));
+if (initialTheme === "light") ok("light is the default theme");
+else bad(`default theme is "${initialTheme}", expected light`);
+await page.locator('[data-act="theme"]').click();
+await page.waitForTimeout(200);
+if ((await page.evaluate(() => document.documentElement.getAttribute("data-theme"))) === "dark")
+  ok("the theme toggle switches to dark");
+else bad("theme toggle did not reach dark");
+
 // --- responsive + theme ------------------------------------------------------
 await page.emulateMedia({ colorScheme: "dark" });
 await page.waitForTimeout(150);

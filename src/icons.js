@@ -83,22 +83,55 @@ export function luminance(hex) {
   return 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
 }
 
+// Real project marks, loaded from data/logos.json at startup. Empty until then,
+// so every call falls back to a category glyph and nothing waits on the fetch.
+let LOGOS = {};
+
+export function setLogos(icons) {
+  LOGOS = icons || {};
+}
+
+export const hasLogo = (id) => Object.hasOwn(LOGOS, id);
+
 /**
- * The tile used everywhere an item is shown. Brand colour carries identity,
- * the glyph says what kind of thing it is.
+ * The tile used everywhere an item is shown.
+ *
+ * A real logo is used when one exists for the entry. simple-icons marks are a
+ * single monochrome path, so they are drawn in the project's own brand colour
+ * on a tint of it; dashboard-icons marks carry their own colours and sit on a
+ * neutral tile instead, which is the only way multi-colour art stays legible in
+ * both themes. Anything with no logo keeps its category glyph.
  */
 export function logoTile(item, { size = 38, glyph = null } = {}) {
+  const logo = LOGOS[item.icon === false ? null : item.id];
+  const inner = Math.round(size * (logo?.src === "dashboard-icons" ? 0.62 : 0.58));
+  const box = `width:${size}px;height:${size}px`;
+
+  if (logo?.mono) {
+    const brand = logo.hex || item.brand || "#7a8699";
+    const lum = luminance(brand);
+    // Near-black and near-white brand colours vanish against one theme or the
+    // other, so those fall back to the text colour.
+    const ink = lum < 0.09 || lum > 0.9 ? "currentColor" : brand;
+    return `<span class="tile" style="--brand:${brand};--tile-ink:${ink};${box}">
+      <svg viewBox="0 0 24 24" width="${inner}" height="${inner}" aria-hidden="true"
+        fill="var(--tile-ink)"><path d="${logo.mono}"/></svg></span>`;
+  }
+
+  if (logo?.svg) {
+    return `<span class="tile art" style="${box}">
+      <svg viewBox="${logo.viewBox}" width="${inner}" height="${inner}" aria-hidden="true"
+        >${logo.svg}</svg></span>`;
+  }
+
   const brand = item.brand || "#7a8699";
   const name = glyph || item.glyph || FALLBACK_GLYPH;
   const lum = luminance(brand);
-  // Very dark or very light brand colours are pushed toward the text colour so
-  // the glyph never disappears against the tile.
   const ink = lum < 0.12 || lum > 0.88 ? "currentColor" : brand;
-  const inner = Math.round(size * 0.55);
   if (item.iconUrl)
-    return `<span class="tile" style="--brand:${brand};width:${size}px;height:${size}px">
+    return `<span class="tile" style="--brand:${brand};${box}">
       <img src="${item.iconUrl}" alt="" width="${inner}" height="${inner}" loading="lazy"></span>`;
-  return `<span class="tile" style="--brand:${brand};--tile-ink:${ink};width:${size}px;height:${size}px">${
+  return `<span class="tile" style="--brand:${brand};--tile-ink:${ink};${box}">${
     svg(name, { size: inner, stroke: "var(--tile-ink)", width: 1.7 })
   }</span>`;
 }

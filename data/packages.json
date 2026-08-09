@@ -173,7 +173,8 @@
       "brand": "#7d4698",
       "desc": "Routes traffic through the Tor network and resists fingerprinting.",
       "home": "https://www.torproject.org/",
-      "docs": "https://tb-manual.torproject.org/"
+      "docs": "https://tb-manual.torproject.org/",
+      "icon": "torbrowser"
     },
     {
       "id": "qutebrowser",
@@ -298,7 +299,8 @@
       "brand": "#fe315d",
       "desc": "JetBrains IDE for JVM languages, community edition.",
       "home": "https://www.jetbrains.com/idea/",
-      "docs": "https://www.jetbrains.com/help/idea/"
+      "docs": "https://www.jetbrains.com/help/idea/",
+      "icon": "intellijidea"
     },
     {
       "id": "obsidian",
@@ -378,7 +380,8 @@
       "home": "https://www.zsh.org/",
       "docs": "https://zsh.sourceforge.io/Doc/",
       "module": "programs.zsh = {\n  enable = true;\n  enableCompletion = true;\n  autosuggestions.enable = true;\n  syntaxHighlighting.enable = true;\n};",
-      "shell": "zsh"
+      "shell": "zsh",
+      "icon": "zsh"
     },
     {
       "id": "fish",
@@ -391,7 +394,8 @@
       "home": "https://fishshell.com/",
       "docs": "https://fishshell.com/docs/current/",
       "module": "programs.fish.enable = true;",
-      "shell": "fish"
+      "shell": "fish",
+      "icon": "fishshell"
     },
     {
       "id": "nushell",
@@ -425,7 +429,8 @@
       "brand": "#1bb91f",
       "desc": "Terminal multiplexer - detachable sessions, splits and windows.",
       "home": "https://github.com/tmux/tmux",
-      "docs": "https://github.com/tmux/tmux/wiki"
+      "docs": "https://github.com/tmux/tmux/wiki",
+      "icon": "tmux"
     },
     {
       "id": "zellij",
@@ -616,7 +621,8 @@
       "brand": "#5277c3",
       "desc": "Turns nix build output into a readable live tree.",
       "home": "https://github.com/maralorn/nix-output-monitor",
-      "docs": "https://github.com/maralorn/nix-output-monitor#readme"
+      "docs": "https://github.com/maralorn/nix-output-monitor#readme",
+      "icon": "nixos"
     },
     {
       "id": "nh",
@@ -627,7 +633,8 @@
       "brand": "#5277c3",
       "desc": "Friendlier wrapper around nixos-rebuild with a diff of what changed.",
       "home": "https://github.com/nix-community/nh",
-      "docs": "https://github.com/nix-community/nh#readme"
+      "docs": "https://github.com/nix-community/nh#readme",
+      "icon": "nixos"
     },
     {
       "id": "nixpkgs-fmt",
@@ -638,7 +645,8 @@
       "brand": "#5277c3",
       "desc": "The official Nix code formatter.",
       "home": "https://github.com/NixOS/nixfmt",
-      "docs": "https://github.com/NixOS/nixfmt#readme"
+      "docs": "https://github.com/NixOS/nixfmt#readme",
+      "icon": "nixos"
     },
     {
       "id": "gcc",
@@ -738,7 +746,8 @@
       "desc": "Java development kit.",
       "home": "https://openjdk.org/",
       "docs": "https://docs.oracle.com/en/java/javase/",
-      "module": "programs.java.enable = true;"
+      "module": "programs.java.enable = true;",
+      "icon": "openjdk"
     },
     {
       "id": "zig",
@@ -760,7 +769,8 @@
       "brand": "#5e5086",
       "desc": "The Glasgow Haskell Compiler.",
       "home": "https://www.haskell.org/ghc/",
-      "docs": "https://downloads.haskell.org/ghc/latest/docs/users_guide/"
+      "docs": "https://downloads.haskell.org/ghc/latest/docs/users_guide/",
+      "icon": "haskell"
     },
     {
       "id": "lua",
@@ -771,7 +781,8 @@
       "brand": "#2c2d72",
       "desc": "Small embeddable scripting language.",
       "home": "https://www.lua.org/",
-      "docs": "https://www.lua.org/manual/5.4/"
+      "docs": "https://www.lua.org/manual/5.4/",
+      "icon": "lua"
     },
     {
       "id": "php",
@@ -1124,7 +1135,8 @@
       "brand": "#1d99f3",
       "desc": "Document viewer with annotation support.",
       "home": "https://okular.kde.org/",
-      "docs": "https://docs.kde.org/?application=okular"
+      "docs": "https://docs.kde.org/?application=okular",
+      "icon": "kde"
     },
     {
       "id": "pandoc",
@@ -1420,7 +1432,8 @@
       "brand": "#4caf50",
       "desc": "Interactive process viewer.",
       "home": "https://htop.dev/",
-      "docs": "https://htop.dev/documentation.html"
+      "docs": "https://htop.dev/documentation.html",
+      "icon": "htop"
     },
     {
       "id": "btop",
@@ -1651,7 +1664,8 @@
       "brand": "#073551",
       "desc": "Transfers data over just about any protocol.",
       "home": "https://curl.se/",
-      "docs": "https://curl.se/docs/manpage.html"
+      "docs": "https://curl.se/docs/manpage.html",
+      "icon": "curl"
     },
     {
       "id": "wget",
@@ -1773,7 +1787,8 @@
       "desc": "OpenPGP encryption and signing, with the agent enabled.",
       "home": "https://gnupg.org/",
       "docs": "https://gnupg.org/documentation/",
-      "module": "programs.gnupg.agent = {\n  enable = true;\n  enableSSHSupport = true;\n};"
+      "module": "programs.gnupg.agent = {\n  enable = true;\n  enableSSHSupport = true;\n};",
+      "icon": "gnuprivacyguard"
     },
     {
       "id": "age",
@@ -1864,7 +1879,8 @@
       "brand": "#88171a",
       "desc": "Modern, fast, minimal VPN tooling.",
       "home": "https://www.wireguard.com/",
-      "docs": "https://www.wireguard.com/quickstart/"
+      "docs": "https://www.wireguard.com/quickstart/",
+      "icon": "wireguard"
     },
     {
       "id": "mullvad-vpn",
@@ -1887,7 +1903,8 @@
       "brand": "#7d4698",
       "desc": "The Tor daemon for onion routing.",
       "home": "https://www.torproject.org/",
-      "docs": "https://community.torproject.org/onion-services/"
+      "docs": "https://community.torproject.org/onion-services/",
+      "icon": "torproject"
     },
     {
       "id": "virt-manager",
@@ -1946,7 +1963,8 @@
       "desc": "Monospace font patched with icon glyphs - needed by most terminal dashboards.",
       "home": "https://www.nerdfonts.com/",
       "docs": "https://www.nerdfonts.com/cheat-sheet",
-      "font": true
+      "font": true,
+      "icon": false
     },
     {
       "id": "fira-code",
@@ -1958,7 +1976,8 @@
       "desc": "Monospace font with programming ligatures.",
       "home": "https://github.com/tonsky/FiraCode",
       "docs": "https://github.com/tonsky/FiraCode#readme",
-      "font": true
+      "font": true,
+      "icon": false
     },
     {
       "id": "noto-fonts",
@@ -1970,7 +1989,8 @@
       "desc": "Covers essentially every writing system - stops tofu boxes appearing.",
       "home": "https://fonts.google.com/noto",
       "docs": "https://fonts.google.com/noto/specimen/Noto+Sans",
-      "font": true
+      "font": true,
+      "icon": "googlefonts"
     },
     {
       "id": "noto-fonts-emoji",
@@ -1982,7 +2002,8 @@
       "desc": "Colour emoji. Without this, emoji render as empty rectangles.",
       "home": "https://fonts.google.com/noto/specimen/Noto+Color+Emoji",
       "docs": "https://github.com/googlefonts/noto-emoji",
-      "font": true
+      "font": true,
+      "icon": false
     },
     {
       "id": "inter",
@@ -1994,7 +2015,8 @@
       "desc": "Highly legible UI typeface.",
       "home": "https://rsms.me/inter/",
       "docs": "https://rsms.me/inter/",
-      "font": true
+      "font": true,
+      "icon": false
     },
     {
       "id": "liberation",
@@ -2006,7 +2028,8 @@
       "desc": "Metric-compatible replacements for Arial, Times and Courier.",
       "home": "https://github.com/liberationfonts/liberation-fonts",
       "docs": "https://github.com/liberationfonts/liberation-fonts#readme",
-      "font": true
+      "font": true,
+      "icon": false
     },
     {
       "id": "octave",
@@ -2085,6 +2108,318 @@
       "desc": "Command line image conversion, resizing and compositing.",
       "home": "https://imagemagick.org/",
       "docs": "https://imagemagick.org/script/command-line-processing.php"
+    },
+    {
+      "id": "st",
+      "attr": "st",
+      "name": "st",
+      "cat": "terminal",
+      "glyph": "terminal",
+      "brand": "#1177aa",
+      "icon": "suckless",
+      "desc": "The suckless terminal. Tiny, fast, and configured by editing config.h and recompiling.",
+      "home": "https://st.suckless.org/",
+      "docs": "https://st.suckless.org/"
+    },
+    {
+      "id": "dmenu",
+      "attr": "dmenu",
+      "name": "dmenu",
+      "cat": "system",
+      "glyph": "search",
+      "brand": "#1177aa",
+      "icon": "suckless",
+      "desc": "Dynamic menu for X. The launcher dwm expects, and a general-purpose list picker for scripts.",
+      "home": "https://tools.suckless.org/dmenu/",
+      "docs": "https://tools.suckless.org/dmenu/"
+    },
+    {
+      "id": "dwmblocks",
+      "attr": "dwmblocks",
+      "name": "dwmblocks",
+      "cat": "system",
+      "glyph": "chart",
+      "brand": "#1177aa",
+      "icon": "suckless",
+      "desc": "Modular status bar for dwm - each block is a script, refreshed on its own interval.",
+      "home": "https://github.com/torrinfail/dwmblocks",
+      "docs": "https://github.com/torrinfail/dwmblocks#readme"
+    },
+    {
+      "id": "slock",
+      "attr": "slock",
+      "name": "slock",
+      "cat": "security",
+      "glyph": "lock",
+      "brand": "#1177aa",
+      "icon": "suckless",
+      "desc": "Minimal X screen locker. One job, a few hundred lines.",
+      "home": "https://tools.suckless.org/slock/",
+      "docs": "https://tools.suckless.org/slock/"
+    },
+    {
+      "id": "lf",
+      "attr": "lf",
+      "name": "lf",
+      "cat": "cli",
+      "glyph": "folder",
+      "brand": "#4a4a4a",
+      "desc": "Terminal file manager in the spirit of ranger, written in Go.",
+      "home": "https://github.com/gokcehan/lf",
+      "docs": "https://github.com/gokcehan/lf/blob/master/doc.md"
+    },
+    {
+      "id": "nsxiv",
+      "attr": "nsxiv",
+      "name": "nsxiv",
+      "cat": "media",
+      "glyph": "image",
+      "brand": "#5c8a3a",
+      "desc": "Neo Simple X Image Viewer. Keyboard-driven, with a thumbnail mode.",
+      "home": "https://codeberg.org/nsxiv/nsxiv",
+      "docs": "https://codeberg.org/nsxiv/nsxiv/wiki"
+    },
+    {
+      "id": "newsboat",
+      "attr": "newsboat",
+      "name": "Newsboat",
+      "cat": "cli",
+      "glyph": "book",
+      "brand": "#2f6f4f",
+      "desc": "Terminal RSS and Atom reader with a mutt-like interface.",
+      "home": "https://newsboat.org/",
+      "docs": "https://newsboat.org/releases/2.38/docs/newsboat.html"
+    },
+    {
+      "id": "neomutt",
+      "attr": "neomutt",
+      "name": "NeoMutt",
+      "cat": "comms",
+      "glyph": "mail",
+      "brand": "#3a76a8",
+      "desc": "Terminal mail client. Pair with isync and msmtp for a fully local mailbox.",
+      "home": "https://neomutt.org/",
+      "docs": "https://neomutt.org/guide/"
+    },
+    {
+      "id": "isync",
+      "attr": "isync",
+      "name": "isync / mbsync",
+      "cat": "comms",
+      "glyph": "mail",
+      "brand": "#4a6572",
+      "desc": "Syncs IMAP mailboxes to a local Maildir so mail works offline.",
+      "home": "https://isync.sourceforge.io/",
+      "docs": "https://isync.sourceforge.io/mbsync.html"
+    },
+    {
+      "id": "msmtp",
+      "attr": "msmtp",
+      "name": "msmtp",
+      "cat": "comms",
+      "glyph": "mail",
+      "brand": "#4a6572",
+      "desc": "Minimal SMTP client for sending the mail NeoMutt writes.",
+      "home": "https://marlam.de/msmtp/",
+      "docs": "https://marlam.de/msmtp/msmtp.html"
+    },
+    {
+      "id": "ncmpcpp",
+      "attr": "ncmpcpp",
+      "name": "ncmpcpp",
+      "cat": "media",
+      "glyph": "music",
+      "brand": "#8bc34a",
+      "desc": "Terminal MPD client with a visualiser and a proper library browser.",
+      "home": "https://rybczak.net/ncmpcpp/",
+      "docs": "https://github.com/ncmpcpp/ncmpcpp/wiki"
+    },
+    {
+      "id": "mpc",
+      "attr": "mpc",
+      "name": "mpc",
+      "cat": "cli",
+      "glyph": "music",
+      "brand": "#8bc34a",
+      "desc": "Scriptable command line client for MPD - what status bar blocks call.",
+      "home": "https://www.musicpd.org/clients/mpc/",
+      "docs": "https://www.musicpd.org/doc/mpc/html/"
+    },
+    {
+      "id": "pass",
+      "attr": "pass",
+      "name": "pass",
+      "cat": "security",
+      "glyph": "key",
+      "brand": "#2f6f4f",
+      "desc": "The standard Unix password manager: GPG-encrypted files in a git repository.",
+      "home": "https://www.passwordstore.org/",
+      "docs": "https://git.zx2c4.com/password-store/about/"
+    },
+    {
+      "id": "calcurse",
+      "attr": "calcurse",
+      "name": "calcurse",
+      "cat": "office",
+      "glyph": "calendar",
+      "brand": "#a0522d",
+      "desc": "Terminal calendar and to-do list with reminders.",
+      "home": "https://calcurse.org/",
+      "docs": "https://calcurse.org/documentation/"
+    },
+    {
+      "id": "taskwarrior",
+      "attr": "taskwarrior3",
+      "name": "Taskwarrior",
+      "cat": "office",
+      "glyph": "doc",
+      "brand": "#4a90d9",
+      "desc": "Command line task manager with projects, tags and due dates.",
+      "home": "https://taskwarrior.org/",
+      "docs": "https://taskwarrior.org/docs/"
+    },
+    {
+      "id": "abook",
+      "attr": "abook",
+      "name": "abook",
+      "cat": "comms",
+      "glyph": "book",
+      "brand": "#6a5acd",
+      "desc": "Terminal address book that NeoMutt can query directly.",
+      "home": "https://abook.sourceforge.io/",
+      "docs": "https://abook.sourceforge.io/"
+    },
+    {
+      "id": "dunst",
+      "attr": "dunst",
+      "name": "dunst",
+      "cat": "system",
+      "glyph": "chat",
+      "brand": "#e8a33d",
+      "desc": "Lightweight notification daemon for window managers that ship without one.",
+      "home": "https://dunst-project.org/",
+      "docs": "https://dunst-project.org/documentation/"
+    },
+    {
+      "id": "picom",
+      "attr": "picom",
+      "name": "picom",
+      "cat": "system",
+      "glyph": "image",
+      "brand": "#7e57c2",
+      "desc": "X11 compositor - transparency, shadows, and tear-free rendering.",
+      "home": "https://github.com/yshui/picom",
+      "docs": "https://picom.app/"
+    },
+    {
+      "id": "xwallpaper",
+      "attr": "xwallpaper",
+      "name": "xwallpaper",
+      "cat": "system",
+      "glyph": "image",
+      "brand": "#607d8b",
+      "desc": "Sets the X root window wallpaper. Small enough to call from a startup script.",
+      "home": "https://github.com/stoeckmann/xwallpaper",
+      "docs": "https://github.com/stoeckmann/xwallpaper#readme"
+    },
+    {
+      "id": "maim",
+      "attr": "maim",
+      "name": "maim",
+      "cat": "system",
+      "glyph": "camera",
+      "brand": "#455a64",
+      "desc": "Screenshot utility that pipes to stdout, so it composes with slop and xclip.",
+      "home": "https://github.com/naelstrof/maim",
+      "docs": "https://github.com/naelstrof/maim#readme"
+    },
+    {
+      "id": "xclip",
+      "attr": "xclip",
+      "name": "xclip",
+      "cat": "cli",
+      "glyph": "terminal",
+      "brand": "#607d8b",
+      "desc": "Reads and writes the X clipboard from a shell pipeline.",
+      "home": "https://github.com/astrand/xclip",
+      "docs": "https://github.com/astrand/xclip#readme"
+    },
+    {
+      "id": "xdotool",
+      "attr": "xdotool",
+      "name": "xdotool",
+      "cat": "system",
+      "glyph": "cog",
+      "brand": "#607d8b",
+      "desc": "Simulates keystrokes and moves windows from scripts.",
+      "home": "https://github.com/jordansissel/xdotool",
+      "docs": "https://github.com/jordansissel/xdotool#readme"
+    },
+    {
+      "id": "pulsemixer",
+      "attr": "pulsemixer",
+      "name": "pulsemixer",
+      "cat": "cli",
+      "glyph": "mic",
+      "brand": "#00838f",
+      "desc": "Terminal mixer for PipeWire and PulseAudio.",
+      "home": "https://github.com/GeorgeFilipkin/pulsemixer",
+      "docs": "https://github.com/GeorgeFilipkin/pulsemixer#readme"
+    },
+    {
+      "id": "unclutter",
+      "attr": "unclutter-xfixes",
+      "name": "unclutter",
+      "cat": "system",
+      "glyph": "cog",
+      "brand": "#607d8b",
+      "desc": "Hides the mouse pointer while you type.",
+      "home": "https://github.com/Airblader/unclutter-xfixes",
+      "docs": "https://github.com/Airblader/unclutter-xfixes#readme"
+    },
+    {
+      "id": "arandr",
+      "attr": "arandr",
+      "name": "ARandR",
+      "cat": "system",
+      "glyph": "desktop",
+      "brand": "#455a64",
+      "desc": "Point-and-click front end for xrandr when you plug in a second monitor.",
+      "home": "https://christian.amsuess.com/tools/arandr/",
+      "docs": "https://christian.amsuess.com/tools/arandr/"
+    },
+    {
+      "id": "atool",
+      "attr": "atool",
+      "name": "atool",
+      "cat": "cli",
+      "glyph": "package",
+      "brand": "#795548",
+      "desc": "One command for every archive format, used by lf previews.",
+      "home": "https://www.nongnu.org/atool/",
+      "docs": "https://www.nongnu.org/atool/"
+    },
+    {
+      "id": "poppler-utils",
+      "attr": "poppler-utils",
+      "name": "poppler-utils",
+      "cat": "cli",
+      "glyph": "doc",
+      "brand": "#c0392b",
+      "desc": "pdftotext and friends - what makes PDF previews work in a terminal file manager.",
+      "home": "https://poppler.freedesktop.org/",
+      "docs": "https://poppler.freedesktop.org/"
+    },
+    {
+      "id": "ffmpegthumbnailer",
+      "attr": "ffmpegthumbnailer",
+      "name": "ffmpegthumbnailer",
+      "cat": "cli",
+      "glyph": "video",
+      "brand": "#007808",
+      "desc": "Generates video thumbnails for file manager previews.",
+      "home": "https://github.com/dirkvdb/ffmpegthumbnailer",
+      "docs": "https://github.com/dirkvdb/ffmpegthumbnailer#readme"
     }
   ]
 }

@@ -19,7 +19,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = process.argv[2] || join(ROOT, "baselayer-standalone.html");
 
 const MODULES = ["state.js", "icons.js", "generate.js", "validate.js", "nixsearch.js", "share.js", "ui.js", "app.js"];
-const DATA = ["packages", "services", "desktops", "security", "hardware", "flakes", "bundles"];
+const DATA = ["packages", "services", "desktops", "security", "hardware", "flakes", "bundles", "logos"];
 
 const IMPORT_RE = /^import\s+(?:(\*\s+as\s+\w+)|(\{[^}]*\}))\s+from\s+["']\.\/([\w.-]+)["'];?\s*$/gm;
 const SIDE_EFFECT_RE = /^import\s+["'][^"']+["'];?\s*$/gm;

@@ -15,7 +15,8 @@
       "needsXserver": false,
       "dm": "none",
       "nix": [],
-      "packages": []
+      "packages": [],
+      "icon": false
     },
     {
       "id": "gnome",
@@ -74,7 +75,8 @@
         "konversation"
       ],
       "excludePrefix": "kdePackages.",
-      "packages": []
+      "packages": [],
+      "icon": "kde"
     },
     {
       "id": "cosmic",
@@ -97,7 +99,8 @@
       "nix": [
         "services.desktopManager.cosmic.enable = true;"
       ],
-      "packages": []
+      "packages": [],
+      "icon": false
     },
     {
       "id": "xfce",
@@ -157,7 +160,8 @@
       "nix": [
         "services.xserver.desktopManager.mate.enable = true;"
       ],
-      "packages": []
+      "packages": [],
+      "icon": false
     },
     {
       "id": "budgie",
@@ -182,7 +186,8 @@
         "25.11": [
           "services.xserver.desktopManager.budgie.enable = true;"
         ]
-      }
+      },
+      "icon": false
     },
     {
       "id": "pantheon",
@@ -202,7 +207,8 @@
       "nix": [
         "services.desktopManager.pantheon.enable = true;"
       ],
-      "packages": []
+      "packages": [],
+      "icon": false
     },
     {
       "id": "lxqt",
@@ -222,7 +228,8 @@
       "nix": [
         "services.xserver.desktopManager.lxqt.enable = true;"
       ],
-      "packages": []
+      "packages": [],
+      "icon": false
     },
     {
       "id": "hyprland",
@@ -337,7 +344,8 @@
         "fuzzel",
         "foot",
         "wl-clipboard"
-      ]
+      ],
+      "icon": false
     },
     {
       "id": "i3",
@@ -367,6 +375,38 @@
       ]
     },
     {
+      "id": "dwm",
+      "name": "dwm",
+      "kind": "wm",
+      "session": "none+dwm",
+      "brand": "#1177aa",
+      "glyph": "tiling",
+      "icon": "dwm",
+      "desc": "The suckless dynamic window manager. Under 2000 lines of C, configured by editing config.h and recompiling.",
+      "home": "https://dwm.suckless.org/",
+      "docs": "https://dwm.suckless.org/tutorial/",
+      "wayland": false,
+      "x11": true,
+      "needsXserver": true,
+      "dm": "lightdm",
+      "ram": "low",
+      "nix": [
+        "services.xserver.windowManager.dwm.enable = true;"
+      ],
+      "packages": [
+        "st",
+        "dmenu",
+        "dwmblocks",
+        "xwallpaper",
+        "dunst",
+        "picom",
+        "xclip",
+        "maim",
+        "slock"
+      ],
+      "suckless": true
+    },
+    {
       "id": "awesome",
       "name": "AwesomeWM",
       "kind": "wm",
@@ -389,6 +429,33 @@
         "feh",
         "picom",
         "rofi"
+      ]
+    },
+    {
+      "id": "qtile",
+      "name": "Qtile",
+      "kind": "wm",
+      "session": "none+qtile",
+      "brand": "#f5a623",
+      "glyph": "tiling",
+      "icon": "qtile",
+      "desc": "Tiling window manager written and configured entirely in Python. Runs on X11 or Wayland.",
+      "home": "https://qtile.org/",
+      "docs": "https://docs.qtile.org/",
+      "wayland": true,
+      "x11": true,
+      "needsXserver": true,
+      "dm": "lightdm",
+      "ram": "low",
+      "nix": [
+        "services.xserver.windowManager.qtile.enable = true;"
+      ],
+      "packages": [
+        "alacritty",
+        "rofi",
+        "feh",
+        "picom",
+        "dunst"
       ]
     },
     {
@@ -444,7 +511,8 @@
         "dmenu",
         "alacritty",
         "feh"
-      ]
+      ],
+      "icon": "haskell"
     }
   ],
   "displayManagers": [
@@ -472,6 +540,11 @@
       "id": "greetd",
       "name": "greetd + tuigreet",
       "desc": "Minimal text login. Ideal for Wayland tiling setups."
+    },
+    {
+      "id": "startx",
+      "name": "startx from a TTY",
+      "desc": "No login screen at all. Log in on the console and run startx."
     },
     {
       "id": "none",

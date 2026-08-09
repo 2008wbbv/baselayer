@@ -11,11 +11,14 @@ uploaded anywhere.
 
 ## What it does
 
-- **Prebuilt bundles** - twelve starting points (media server, homelab, gaming
-  rig, Hyprland rice, NAS, smart-home hub, privacy workstation, local AI box…).
-  Applying one just ticks boxes; everything stays editable.
-- **Desktops** - 18 desktop environments and window managers, each with the
-  right display manager, portals and session tools wired up.
+- **Prebuilt bundles** - thirteen starting points (media server, homelab, gaming
+  rig, Hyprland rice, **Suckless/dwm**, NAS, smart-home hub, privacy workstation,
+  local AI box…). Applying one just ticks boxes; everything stays editable.
+- **Desktops** - 20 desktop environments and window managers, each with the
+  right display manager, portals and session tools wired up. That includes
+  **dwm**, with an overlay that builds dwm, st, dmenu and dwmblocks from your
+  own patched fork, since suckless tools take their configuration at compile
+  time and cannot be configured through options at all.
 - **Packages** - a curated catalog of ~180 with descriptions, brand colours and
   documentation links, plus **live search across all of nixpkgs** using the same
   index `search.nixos.org` queries. Searched packages carry their real licence,
@@ -111,7 +114,8 @@ python3 -m http.server 8137     # then open http://localhost:8137/
 node tools/bundle.mjs baselayer-standalone.html
 ```
 
-Inlines every module, the stylesheet and the whole catalog into one ~270 kB HTML
+Inlines every module, the stylesheet, the logos and the whole catalog into one
+~580 kB HTML
 file that works from `file://`, a USB stick, or an offline laptop. Live nixpkgs
 search naturally does not work without a network; it falls back to the bundled
 catalog and says so.
@@ -131,6 +135,7 @@ src/ui.js             views
 src/app.js            wiring
 data/*.json           the catalog - packages, services, desktops, security,
                       hardware, flake inputs, bundles
+data/logos.json       generated project marks (see Logos below)
 get.txt               the installer script the curl command pipes into
 tools/                tests and utilities
 ```
@@ -171,6 +176,7 @@ node tools/test.mjs              # ~1500 structural checks, offline
 node tools/test.mjs --online     # also verify every emitted option exists
 node tools/verify-catalog.mjs    # check the catalog against the live index
 node tools/browser-check.mjs     # drive the real page in Chromium
+node tools/fetch-logos.mjs       # regenerate data/logos.json
 ```
 
 `tools/test.mjs` generates configurations across every bundle, desktop, display
@@ -188,17 +194,41 @@ became `programs.river-classic`, that `services.resolved.dnssec` became
 Jellyseerr modules were removed, and that `services.displayManager.gdm.wayland`
 no longer exists.
 
-`tools/browser-check.mjs` needs Chromium and covers 28 behaviours end to end,
+`tools/browser-check.mjs` needs Chromium and covers 37 behaviours end to end,
 including decoding the generated curl payload back into the exact same files and
 a full share-link round trip.
 
-## A note on the logos
+## Logos
 
-The tiles next to each package are original category glyphs plus the project's
-brand colour, not copies of project logos. Reproducing a few hundred trademarked
-marks would be both legally awkward and a large download, and this never breaks
-or 404s. Any catalog entry can set `iconUrl` if you would rather supply real
-artwork yourself.
+Real project marks, bundled locally so the page makes no external requests:
+
+- **[simple-icons](https://simpleicons.org/)** (CC0-1.0) - monochrome 24x24 paths
+  plus each project's official brand colour. Used for 158 entries.
+- **[homarr-labs/dashboard-icons](https://github.com/homarr-labs/dashboard-icons)**
+  (Apache-2.0) - full-colour marks, and the only practical source for
+  self-hosted service logos. Used for 29 entries.
+
+The marks themselves are trademarks of their owners and appear here only to
+identify the software, which is the same basis both upstream projects ship them
+on. Anything with no logo in either set - most CLI tools genuinely have none -
+falls back to a hand-drawn category glyph, so nothing ever renders empty.
+
+Regenerate with:
+
+```sh
+npm install simple-icons@16
+node tools/fetch-logos.mjs --refresh --report
+```
+
+The tool matches on id, attribute and name, caches what it resolved, and skips
+any mark over 20 kB (a couple upstream are enormously detailed - one is 89 kB by
+itself, which costs more than the logo is worth). Pin a specific icon with
+`"icon": "<slug>"` on a catalog entry, or opt out with `"icon": false`.
+
+## Appearance
+
+Light by default. The theme button in the header cycles light, dark, and
+following your system setting; the choice is remembered.
 
 ## Things it deliberately does not do
 

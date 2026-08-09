@@ -36,6 +36,13 @@ export function validate(state, cat, result) {
       `"${state.meta.hostname}" is not a valid hostname. Use letters, digits and hyphens, and do not start or end with a hyphen.`,
       "Fix the hostname on the Basics step.");
 
+  let tzOk = true;
+  try { new Intl.DateTimeFormat("en", { timeZone: state.meta.timezone }); } catch { tzOk = false; }
+  if (!tzOk)
+    add(ERROR, "Time zone is not recognised",
+      `"${state.meta.timezone}" is not an IANA zone name, so time.timeZone will fail to evaluate.`,
+      "Pick one from the suggestions on the Basics step, e.g. Europe/London.");
+
   // --- kernel vs hardware --------------------------------------------------
   if (on.has("hardened-kernel")) {
     if (gpu && gpu.id.startsWith("nvidia"))

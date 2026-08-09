@@ -6,7 +6,9 @@
       "name": "Home Manager",
       "owner": "nix-community/home-manager",
       "url": "github:nix-community/home-manager/release-%%REL%%",
-      "urlByChannel": { "unstable": "github:nix-community/home-manager" },
+      "urlByChannel": {
+        "unstable": "github:nix-community/home-manager"
+      },
       "brand": "#5277c3",
       "glyph": "home",
       "desc": "Manages your dotfiles and per-user packages declaratively, in the same rebuild as the system.",
@@ -22,7 +24,8 @@
         "  backupFileExtension = \"hm-bak\";",
         "};"
       ],
-      "producesHome": true
+      "producesHome": true,
+      "icon": "nixos"
     },
     {
       "id": "nixos-hardware",
@@ -36,7 +39,8 @@
       "docs": "https://github.com/NixOS/nixos-hardware#readme",
       "follows": false,
       "module": "nixos-hardware.nixosModules.common-cpu-intel",
-      "note": "Swap the module for the one matching your machine, e.g. nixos-hardware.nixosModules.framework-13-7040-amd. The full list is in the repository README."
+      "note": "Swap the module for the one matching your machine, e.g. nixos-hardware.nixosModules.framework-13-7040-amd. The full list is in the repository README.",
+      "icon": "nixos"
     },
     {
       "id": "sops-nix",
@@ -50,7 +54,8 @@
       "docs": "https://github.com/Mic92/sops-nix#readme",
       "follows": true,
       "module": "sops-nix.nixosModules.sops",
-      "note": "The right answer to every 'create this password file by hand' note elsewhere in this config."
+      "note": "The right answer to every 'create this password file by hand' note elsewhere in this config.",
+      "icon": "nixos"
     },
     {
       "id": "agenix",
@@ -64,7 +69,10 @@
       "docs": "https://github.com/ryantm/agenix#readme",
       "follows": true,
       "module": "agenix.nixosModules.default",
-      "conflicts": ["sops-nix"]
+      "conflicts": [
+        "sops-nix"
+      ],
+      "icon": "nixos"
     },
     {
       "id": "disko",
@@ -78,7 +86,8 @@
       "docs": "https://github.com/nix-community/disko/blob/master/docs/quickstart.md",
       "follows": true,
       "module": "disko.nixosModules.disko",
-      "note": "You still need to write a disk layout module. This only adds the input and the module."
+      "note": "You still need to write a disk layout module. This only adds the input and the module.",
+      "icon": "nixos"
     },
     {
       "id": "lanzaboote",
@@ -93,21 +102,25 @@
       "follows": true,
       "module": "lanzaboote.nixosModules.lanzaboote",
       "requiresFirmware": "uefi",
-      "note": "Requires enrolling your own Secure Boot keys and turning systemd-boot off. Read the quick start before enabling it."
+      "note": "Requires enrolling your own Secure Boot keys and turning systemd-boot off. Read the quick start before enabling it.",
+      "icon": "nixos"
     },
     {
       "id": "stylix",
       "name": "Stylix",
       "owner": "nix-community/stylix",
       "url": "github:nix-community/stylix/release-%%REL%%",
-      "urlByChannel": { "unstable": "github:nix-community/stylix" },
+      "urlByChannel": {
+        "unstable": "github:nix-community/stylix"
+      },
       "brand": "#a855f7",
       "glyph": "palette",
       "desc": "Derives a consistent colour scheme, fonts and wallpaper across every application from one image.",
       "home": "https://github.com/nix-community/stylix",
       "docs": "https://stylix.danth.me/",
       "follows": true,
-      "module": "stylix.nixosModules.stylix"
+      "module": "stylix.nixosModules.stylix",
+      "icon": "nixos"
     },
     {
       "id": "nix-flatpak",
@@ -121,7 +134,10 @@
       "docs": "https://github.com/gmodena/nix-flatpak#readme",
       "follows": false,
       "module": "nix-flatpak.nixosModules.nix-flatpak",
-      "requires": ["flatpak"]
+      "requires": [
+        "flatpak"
+      ],
+      "icon": "nixos"
     },
     {
       "id": "impermanence",
@@ -135,7 +151,8 @@
       "docs": "https://github.com/nix-community/impermanence#readme",
       "follows": false,
       "module": "impermanence.nixosModules.impermanence",
-      "note": "This genuinely deletes anything you forget to declare. Read the README fully first."
+      "note": "This genuinely deletes anything you forget to declare. Read the README fully first.",
+      "icon": "nixos"
     },
     {
       "id": "nur",
@@ -149,7 +166,8 @@
       "docs": "https://nur.nix-community.org/",
       "follows": true,
       "module": "nur.modules.nixos.default",
-      "note": "NUR packages are built from user repositories and are not reviewed by nixpkgs maintainers."
+      "note": "NUR packages are built from user repositories and are not reviewed by nixpkgs maintainers.",
+      "icon": "nixos"
     },
     {
       "id": "nix-index-database",
@@ -162,7 +180,8 @@
       "home": "https://github.com/nix-community/nix-index-database",
       "docs": "https://github.com/nix-community/nix-index-database#readme",
       "follows": true,
-      "module": "nix-index-database.nixosModules.nix-index"
+      "module": "nix-index-database.nixosModules.nix-index",
+      "icon": "nixos"
     },
     {
       "id": "chaotic",
@@ -176,7 +195,8 @@
       "docs": "https://www.nyx.chaotic.cx/",
       "follows": false,
       "module": "chaotic.nixosModules.default",
-      "note": "Adds a third-party binary cache. Only enable it if you trust that cache to serve your binaries."
+      "note": "Adds a third-party binary cache. Only enable it if you trust that cache to serve your binaries.",
+      "icon": "nixos"
     },
     {
       "id": "musnix",
@@ -190,7 +210,10 @@
       "docs": "https://github.com/musnix/musnix#readme",
       "follows": false,
       "module": "musnix.nixosModules.musnix",
-      "config": ["musnix.enable = true;"]
+      "config": [
+        "musnix.enable = true;"
+      ],
+      "icon": "nixos"
     },
     {
       "id": "jovian",
@@ -203,7 +226,8 @@
       "home": "https://github.com/Jovian-Experiments/Jovian-NixOS",
       "docs": "https://jovian-nixos.github.io/Jovian-NixOS/",
       "follows": false,
-      "module": "jovian.nixosModules.default"
+      "module": "jovian.nixosModules.default",
+      "icon": "steamdeck"
     }
   ]
 }

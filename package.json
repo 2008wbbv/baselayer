@@ -10,7 +10,11 @@
     "test:online": "node tools/test.mjs --online",
     "verify": "node tools/verify-catalog.mjs",
     "browser": "node tools/browser-check.mjs",
-    "bundle": "node tools/bundle.mjs baselayer-standalone.html"
+    "bundle": "node tools/bundle.mjs baselayer-standalone.html",
+    "logos": "node tools/fetch-logos.mjs"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "simple-icons": "^16.28.0"
+  }
 }

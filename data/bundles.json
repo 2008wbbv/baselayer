@@ -14,9 +14,21 @@
         "gpu": "none",
         "swap": "zram",
         "security": "baseline",
-        "packages": ["git", "htop", "btop", "ncdu", "ripgrep", "curl", "wget", "tmux", "fastfetch"],
+        "packages": [
+          "git",
+          "htop",
+          "btop",
+          "ncdu",
+          "ripgrep",
+          "curl",
+          "wget",
+          "tmux",
+          "fastfetch"
+        ],
         "services": [],
-        "options": { "ssh": true }
+        "options": {
+          "ssh": true
+        }
       }
     },
     {
@@ -32,9 +44,28 @@
         "gpu": "none",
         "swap": "zram",
         "security": "baseline",
-        "packages": ["git", "btop", "ncdu", "restic", "rsync", "lazydocker", "docker"],
-        "services": ["caddy", "vaultwarden", "homepage", "uptime-kuma", "restic-backup", "adguardhome", "avahi"],
-        "options": { "ssh": true, "reverseProxy": true }
+        "packages": [
+          "git",
+          "btop",
+          "ncdu",
+          "restic",
+          "rsync",
+          "lazydocker",
+          "docker"
+        ],
+        "services": [
+          "caddy",
+          "vaultwarden",
+          "homepage",
+          "uptime-kuma",
+          "restic-backup",
+          "adguardhome",
+          "avahi"
+        ],
+        "options": {
+          "ssh": true,
+          "reverseProxy": true
+        }
       }
     },
     {
@@ -50,9 +81,27 @@
         "gpu": "intel",
         "swap": "zram",
         "security": "baseline",
-        "packages": ["git", "btop", "ncdu", "ffmpeg", "rsync"],
-        "services": ["jellyfin", "sonarr", "radarr", "prowlarr", "bazarr", "transmission", "samba", "avahi"],
-        "options": { "ssh": true, "hwAccel": true }
+        "packages": [
+          "git",
+          "btop",
+          "ncdu",
+          "ffmpeg",
+          "rsync"
+        ],
+        "services": [
+          "jellyfin",
+          "sonarr",
+          "radarr",
+          "prowlarr",
+          "bazarr",
+          "transmission",
+          "samba",
+          "avahi"
+        ],
+        "options": {
+          "ssh": true,
+          "hwAccel": true
+        }
       }
     },
     {
@@ -69,9 +118,24 @@
         "filesystem": "btrfs",
         "swap": "zram",
         "security": "baseline",
-        "packages": ["git", "btop", "ncdu", "smartmontools", "rsync", "restic"],
-        "services": ["samba", "nfs", "syncthing", "restic-backup", "avahi"],
-        "options": { "ssh": true }
+        "packages": [
+          "git",
+          "btop",
+          "ncdu",
+          "smartmontools",
+          "rsync",
+          "restic"
+        ],
+        "services": [
+          "samba",
+          "nfs",
+          "syncthing",
+          "restic-backup",
+          "avahi"
+        ],
+        "options": {
+          "ssh": true
+        }
       }
     },
     {
@@ -88,14 +152,50 @@
         "swap": "zram",
         "security": "baseline",
         "packages": [
-          "firefox", "vscodium", "neovim", "ghostty", "git", "gh", "lazygit", "direnv",
-          "docker", "distrobox", "ripgrep", "fd", "fzf", "bat", "eza", "jq", "btop",
-          "python3", "nodejs", "go", "rustup", "gcc", "just", "nh", "nix-output-monitor",
-          "nerd-fonts", "noto-fonts", "noto-fonts-emoji", "zsh", "starship", "keepassxc"
+          "firefox",
+          "vscodium",
+          "neovim",
+          "ghostty",
+          "git",
+          "gh",
+          "lazygit",
+          "direnv",
+          "docker",
+          "distrobox",
+          "ripgrep",
+          "fd",
+          "fzf",
+          "bat",
+          "eza",
+          "jq",
+          "btop",
+          "python3",
+          "nodejs",
+          "go",
+          "rustup",
+          "gcc",
+          "just",
+          "nh",
+          "nix-output-monitor",
+          "nerd-fonts",
+          "noto-fonts",
+          "noto-fonts-emoji",
+          "zsh",
+          "starship",
+          "keepassxc"
         ],
-        "services": ["postgresql", "avahi"],
-        "flakes": ["home-manager", "nix-index-database"],
-        "options": { "ssh": true, "flatpak": true }
+        "services": [
+          "postgresql",
+          "avahi"
+        ],
+        "flakes": [
+          "home-manager",
+          "nix-index-database"
+        ],
+        "options": {
+          "ssh": true,
+          "flatpak": true
+        }
       }
     },
     {
@@ -112,12 +212,28 @@
         "swap": "zram",
         "security": "relaxed",
         "packages": [
-          "steam", "lutris", "heroic", "bottles", "wine", "mangohud", "gamemode",
-          "gamescope", "protonup-qt", "prismlauncher", "discord", "firefox",
-          "obs-studio", "btop", "nvtopPackages.full", "nerd-fonts", "noto-fonts-emoji"
+          "steam",
+          "lutris",
+          "heroic",
+          "bottles",
+          "wine",
+          "mangohud",
+          "gamemode",
+          "gamescope",
+          "protonup-qt",
+          "prismlauncher",
+          "discord",
+          "firefox",
+          "obs-studio",
+          "btop",
+          "nvtopPackages.full",
+          "nerd-fonts",
+          "noto-fonts-emoji"
         ],
         "services": [],
-        "options": { "gaming": true }
+        "options": {
+          "gaming": true
+        }
       }
     },
     {
@@ -135,13 +251,104 @@
         "swap": "zram",
         "security": "relaxed",
         "packages": [
-          "firefox", "neovim", "kitty", "git", "btop", "ripgrep", "fd", "fzf", "bat",
-          "eza", "zoxide", "starship", "zsh", "mpv", "imagemagick", "nerd-fonts",
-          "noto-fonts", "noto-fonts-emoji", "keepassxc"
+          "firefox",
+          "neovim",
+          "kitty",
+          "git",
+          "btop",
+          "ripgrep",
+          "fd",
+          "fzf",
+          "bat",
+          "eza",
+          "zoxide",
+          "starship",
+          "zsh",
+          "mpv",
+          "imagemagick",
+          "nerd-fonts",
+          "noto-fonts",
+          "noto-fonts-emoji",
+          "keepassxc"
         ],
         "services": [],
-        "flakes": ["home-manager", "stylix"],
+        "flakes": [
+          "home-manager",
+          "stylix"
+        ],
         "options": {}
+      }
+    },
+    {
+      "id": "suckless",
+      "name": "Suckless / dwm",
+      "glyph": "tiling",
+      "brand": "#1177aa",
+      "tagline": "dwm, st, dmenu, terminal-first",
+      "desc": "A LARBS-shaped setup: dwm with its own status bar, st and dmenu, and a terminal program for every job - lf for files, NeoMutt for mail, ncmpcpp for music, newsboat for feeds, zathura for documents.",
+      "patch": {
+        "profile": "desktop",
+        "desktop": "dwm",
+        "loginManager": "startx",
+        "gpu": "intel",
+        "swap": "zram",
+        "security": "relaxed",
+        "packages": [
+          "st",
+          "dmenu",
+          "dwmblocks",
+          "slock",
+          "lf",
+          "nsxiv",
+          "newsboat",
+          "neomutt",
+          "isync",
+          "msmtp",
+          "ncmpcpp",
+          "mpc",
+          "pass",
+          "calcurse",
+          "taskwarrior",
+          "abook",
+          "dunst",
+          "picom",
+          "xwallpaper",
+          "maim",
+          "xclip",
+          "xdotool",
+          "pulsemixer",
+          "unclutter",
+          "arandr",
+          "atool",
+          "poppler-utils",
+          "ffmpegthumbnailer",
+          "zathura",
+          "mpv",
+          "ffmpeg",
+          "yt-dlp",
+          "neovim",
+          "zsh",
+          "git",
+          "fzf",
+          "ripgrep",
+          "fd",
+          "bat",
+          "htop",
+          "firefox",
+          "gnupg",
+          "unzip",
+          "p7zip",
+          "tree",
+          "nerd-fonts",
+          "noto-fonts",
+          "noto-fonts-emoji"
+        ],
+        "services": [
+          "mpd"
+        ],
+        "options": {
+          "ssh": false
+        }
       }
     },
     {
@@ -158,12 +365,24 @@
         "swap": "zram",
         "security": "hardened",
         "packages": [
-          "librewolf", "tor-browser", "keepassxc", "gnupg", "age", "veracrypt",
-          "signal-desktop", "element-desktop", "thunderbird", "libreoffice",
-          "btop", "nerd-fonts", "noto-fonts"
+          "librewolf",
+          "tor-browser",
+          "keepassxc",
+          "gnupg",
+          "age",
+          "veracrypt",
+          "signal-desktop",
+          "element-desktop",
+          "thunderbird",
+          "libreoffice",
+          "btop",
+          "nerd-fonts",
+          "noto-fonts"
         ],
         "services": [],
-        "options": { "ssh": false }
+        "options": {
+          "ssh": false
+        }
       }
     },
     {
@@ -179,9 +398,23 @@
         "gpu": "amd",
         "swap": "zram",
         "security": "relaxed",
-        "packages": ["kodi", "mpv", "vlc", "ffmpeg", "firefox", "moonlight-qt"],
-        "services": ["avahi", "jellyfin"],
-        "options": { "autoLogin": true, "ssh": true, "hwAccel": true }
+        "packages": [
+          "kodi",
+          "mpv",
+          "vlc",
+          "ffmpeg",
+          "firefox",
+          "moonlight-qt"
+        ],
+        "services": [
+          "avahi",
+          "jellyfin"
+        ],
+        "options": {
+          "autoLogin": true,
+          "ssh": true,
+          "hwAccel": true
+        }
       }
     },
     {
@@ -197,9 +430,22 @@
         "gpu": "none",
         "swap": "zram",
         "security": "baseline",
-        "packages": ["git", "btop", "ncdu"],
-        "services": ["home-assistant", "mosquitto", "zigbee2mqtt", "ntfy", "avahi", "restic-backup"],
-        "options": { "ssh": true }
+        "packages": [
+          "git",
+          "btop",
+          "ncdu"
+        ],
+        "services": [
+          "home-assistant",
+          "mosquitto",
+          "zigbee2mqtt",
+          "ntfy",
+          "avahi",
+          "restic-backup"
+        ],
+        "options": {
+          "ssh": true
+        }
       }
     },
     {
@@ -215,9 +461,21 @@
         "gpu": "nvidia",
         "swap": "zram",
         "security": "baseline",
-        "packages": ["git", "btop", "nvtopPackages.full", "python3"],
-        "services": ["ollama-srv", "open-webui", "caddy"],
-        "options": { "ssh": true, "reverseProxy": true }
+        "packages": [
+          "git",
+          "btop",
+          "nvtopPackages.full",
+          "python3"
+        ],
+        "services": [
+          "ollama-srv",
+          "open-webui",
+          "caddy"
+        ],
+        "options": {
+          "ssh": true,
+          "reverseProxy": true
+        }
       }
     },
     {
@@ -234,13 +492,32 @@
         "swap": "zram",
         "security": "baseline",
         "packages": [
-          "firefox", "thunderbird", "libreoffice", "vlc", "gimp", "keepassxc",
-          "signal-desktop", "obsidian", "btop", "powertop", "nerd-fonts",
-          "noto-fonts", "noto-fonts-emoji", "liberation"
+          "firefox",
+          "thunderbird",
+          "libreoffice",
+          "vlc",
+          "gimp",
+          "keepassxc",
+          "signal-desktop",
+          "obsidian",
+          "btop",
+          "powertop",
+          "nerd-fonts",
+          "noto-fonts",
+          "noto-fonts-emoji",
+          "liberation"
         ],
-        "services": ["printing", "avahi"],
-        "flakes": ["nixos-hardware"],
-        "options": { "flatpak": true, "bluetooth": true }
+        "services": [
+          "printing",
+          "avahi"
+        ],
+        "flakes": [
+          "nixos-hardware"
+        ],
+        "options": {
+          "flatpak": true,
+          "bluetooth": true
+        }
       }
     }
   ]

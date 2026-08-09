@@ -50,6 +50,9 @@ export function defaultState() {
     toggles: {},
     net: { ssh: false, networkManager: true, extraTCP: [], extraUDP: [] },
     proxy: { enabled: false, engine: "caddy", baseDomain: "example.com", email: "" },
+    // Suckless tools take their config at compile time, so using your own
+    // patched fork means overriding the source rather than setting options.
+    suckless: { fork: false, owner: "", rev: "master" },
     opts: {
       flatpak: false,
       bluetooth: false,

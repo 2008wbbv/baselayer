@@ -128,7 +128,17 @@ export function generate(state, cat) {
 
   const comment = (text) => {
     if (current.lines.length) current.lines.push("");
-    for (const l of text.split("\n")) current.lines.push(`  # ${l}`);
+    for (const para of text.split("\n")) {
+      // Wrap so a long note does not become one unreadable line in the file.
+      let line = "";
+      for (const word of para.split(/\s+/)) {
+        if (line && (line + " " + word).length > 72) {
+          current.lines.push(`  # ${line}`);
+          line = word;
+        } else line = line ? `${line} ${word}` : word;
+      }
+      current.lines.push(`  # ${line}`);
+    }
   };
 
   // ---- gather contributions to shared list options --------------------------
@@ -289,7 +299,7 @@ export function generate(state, cat) {
 
     const dm = state.loginManager === "auto" ? desktop.dm : state.loginManager;
     emit(displayManager(dm, desktop, state.meta.channel), `dm:${dm}`);
-    if (desktop.session && dm !== "none")
+    if (desktop.session && !["none", "startx"].includes(dm))
       emit([`services.displayManager.defaultSession = ${quote(desktop.session)};`], "core:session");
     if (state.opts.autoLogin && dm !== "none")
       emit([
@@ -305,6 +315,40 @@ export function generate(state, cat) {
         ...desktop.excludeDefaults.map((p) => `  ${prefix}${p}`),
         "];",
       ], "core:exclude");
+    }
+    if (desktop.suckless) {
+      const tools = ["dwm", ...(desktop.packages || [])]
+        .filter((p) => ["dwm", "st", "dmenu", "dwmblocks", "slock"].includes(p));
+      if (state.suckless?.fork) {
+        const owner = state.suckless.owner || "YOUR-GITHUB-USER";
+        const rev = state.suckless.rev || "master";
+        comment(
+          "Suckless tools are configured by editing config.h and recompiling, so\n" +
+          "these are built from your fork instead of the nixpkgs source.\n" +
+          "Pin a commit rather than a branch, and leave the hash as lib.fakeHash\n" +
+          "the first time - the rebuild will fail and print the real one to paste in.",
+        );
+        const lines = ["nixpkgs.overlays = [", "  (final: prev: {"];
+        for (const tool of tools) {
+          lines.push(`    ${tool} = prev.${tool}.overrideAttrs (old: {`);
+          lines.push("      src = prev.fetchFromGitHub {");
+          lines.push(`        owner = ${quote(owner)};`);
+          lines.push(`        repo = ${quote(tool)};`);
+          lines.push(`        rev = ${quote(rev)};`);
+          lines.push("        hash = lib.fakeHash;");
+          lines.push("      };");
+          lines.push("    });");
+        }
+        lines.push("  })", "];");
+        emit(lines, "core:suckless-overlay");
+        notes.push("The suckless overlay uses lib.fakeHash on purpose: build once, copy the hash Nix prints, and paste it in.");
+      } else {
+        comment(
+          "dwm, st and dmenu read config.h at build time, so the nixpkgs builds\n" +
+          "use upstream defaults. To use your own patches and keybindings, turn on\n" +
+          "\"Build from my own fork\" on the Desktop step and point it at your repos.",
+        );
+      }
     }
     if (desktop.portal)
       emit([
@@ -669,6 +713,8 @@ function displayManager(dm, desktop, channel) {
         "  };",
         "};",
       ];
+    case "startx":
+      return ["services.xserver.displayManager.startx.enable = true;"];
     case "none":
     default:
       return [];

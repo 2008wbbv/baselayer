@@ -170,7 +170,7 @@ code, kbd { font-family: var(--mono); font-size: .89em; }
 
 .grid { display: grid; gap: 10px; }
 .grid.g2 { grid-template-columns: repeat(auto-fill, minmax(268px, 1fr)); }
-.grid.g3 { grid-template-columns: repeat(auto-fill, minmax(212px, 1fr)); }
+.grid.g3 { grid-template-columns: repeat(auto-fill, minmax(236px, 1fr)); }
 .grid.g4 { grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); }
 
 .card {
@@ -203,6 +203,14 @@ code, kbd { font-family: var(--mono); font-size: .89em; }
   color: var(--ink);
 }
 .tile img { border-radius: 4px; }
+/* Multi-colour marks bring their own palette, so they need a neutral ground
+   rather than a brand tint that would fight them. */
+.tile.art {
+  background: var(--panel);
+  border-color: var(--line);
+}
+:root[data-theme="dark"] .tile.art,
+.tile.art { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 4%, transparent); }
 
 .pill {
   font-size: .68rem; font-weight: 600; letter-spacing: .02em; text-transform: uppercase;

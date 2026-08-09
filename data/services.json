@@ -576,7 +576,8 @@
         "  openFirewall = true;",
         "};"
       ],
-      "note": "Create the Samba password separately with `smbpasswd -a <user>` - Linux and Samba passwords are stored independently."
+      "note": "Create the Samba password separately with `smbpasswd -a <user>` - Linux and Samba passwords are stored independently.",
+      "icon": "samba"
     },
     {
       "id": "paperless",
@@ -643,7 +644,8 @@
         "    /srv/nfs  192.168.0.0/16(rw,sync,no_subtree_check)",
         "  '';",
         "};"
-      ]
+      ],
+      "icon": false
     },
     {
       "id": "adguardhome",
@@ -770,7 +772,8 @@
       "provides": [
         "proxy"
       ],
-      "note": "Ports 80 and 443 must be reachable from the internet for the ACME HTTP challenge to succeed."
+      "note": "Ports 80 and 443 must be reachable from the internet for the ACME HTTP challenge to succeed.",
+      "icon": "caddy"
     },
     {
       "id": "nginx",
@@ -801,7 +804,8 @@
       ],
       "provides": [
         "proxy"
-      ]
+      ],
+      "icon": "nginx"
     },
     {
       "id": "forgejo",
@@ -836,7 +840,8 @@
         "  };",
         "};"
       ],
-      "note": "Registration is disabled. Create the first account with `forgejo admin user create` as the forgejo user."
+      "note": "Registration is disabled. Create the first account with `forgejo admin user create` as the forgejo user.",
+      "icon": "forgejo"
     },
     {
       "id": "gitea",
@@ -870,7 +875,8 @@
       ],
       "conflicts": [
         "forgejo"
-      ]
+      ],
+      "icon": "gitea"
     },
     {
       "id": "jenkins",
@@ -932,7 +938,8 @@
           "cmd": "nix run nixpkgs#libargon2 -- \"$(head -c16 /dev/urandom | base64)\" -e <<< 'your-password'"
         }
       ],
-      "note": "Replace %%ARGON2_HASH%% with the output of the command above before rebuilding."
+      "note": "Replace %%ARGON2_HASH%% with the output of the command above before rebuilding.",
+      "icon": "coder"
     },
     {
       "id": "prometheus",
@@ -1295,7 +1302,8 @@
           "desc": "SEARX_SECRET - the module substitutes it into secret_key at runtime",
           "cmd": "mkdir -p /var/lib/searx && echo \"SEARX_SECRET=$(head -c32 /dev/urandom | base64)\" > /var/lib/searx/env && chmod 600 /var/lib/searx/env"
         }
-      ]
+      ],
+      "icon": "searxng"
     },
     {
       "id": "miniflux",
@@ -1471,7 +1479,8 @@
         "  port = 11434;",
         "};"
       ],
-      "note": "Set services.ollama.acceleration to \"cuda\" or \"rocm\" to use the GPU. Without it everything runs on the CPU."
+      "note": "Set services.ollama.acceleration to \"cuda\" or \"rocm\" to use the GPU. Without it everything runs on the CPU.",
+      "icon": "ollama"
     },
     {
       "id": "open-webui",
@@ -1504,7 +1513,8 @@
         "    WEBUI_AUTH = \"True\";",
         "  };",
         "};"
-      ]
+      ],
+      "icon": "open-webui"
     },
     {
       "id": "postgresql",
@@ -1526,7 +1536,8 @@
         "  enableTCPIP = false;",
         "};"
       ],
-      "note": "Left listening on the Unix socket only. Turn on enableTCPIP and open port 5432 if something off-box needs it."
+      "note": "Left listening on the Unix socket only. Turn on enableTCPIP and open port 5432 if something off-box needs it.",
+      "icon": "postgresql"
     },
     {
       "id": "mariadb",
@@ -1547,7 +1558,8 @@
         "  enable = true;",
         "  package = pkgs.mariadb;",
         "};"
-      ]
+      ],
+      "icon": "mariadb"
     },
     {
       "id": "redis",
@@ -1569,7 +1581,8 @@
         "  port = 6379;",
         "  bind = \"127.0.0.1\";",
         "};"
-      ]
+      ],
+      "icon": "redis"
     },
     {
       "id": "minecraft",
@@ -1606,7 +1619,8 @@
         "  };",
         "};"
       ],
-      "note": "Setting eula = true records that you accept Mojang's end user licence agreement."
+      "note": "Setting eula = true records that you accept Mojang's end user licence agreement.",
+      "icon": "minecraft"
     },
     {
       "id": "printing",
@@ -1633,7 +1647,8 @@
       "needs": [
         "avahi"
       ],
-      "note": "Driverless IPP discovery needs mDNS, so this pulls in Avahi as well."
+      "note": "Driverless IPP discovery needs mDNS, so this pulls in Avahi as well.",
+      "icon": "cups"
     },
     {
       "id": "restic-backup",
@@ -1671,7 +1686,8 @@
           "cmd": "mkdir -p /var/lib/restic && head -c32 /dev/urandom | base64 > /var/lib/restic/password && chmod 600 /var/lib/restic/password"
         }
       ],
-      "note": "A backup on the same machine is not a backup. Point the repository at another host, or an S3/B2 bucket."
+      "note": "A backup on the same machine is not a backup. Point the repository at another host, or an S3/B2 bucket.",
+      "icon": "restic"
     },
     {
       "id": "avahi",
@@ -1700,7 +1716,8 @@
         "    workstation = true;",
         "  };",
         "};"
-      ]
+      ],
+      "icon": false
     },
     {
       "id": "deluge",
@@ -1862,7 +1879,8 @@
         "    port = 5006;",
         "  };",
         "};"
-      ]
+      ],
+      "icon": "actual-budget"
     },
     {
       "id": "stirling-pdf",
@@ -1920,6 +1938,35 @@
         "  };",
         "};"
       ]
+    },
+    {
+      "id": "mpd",
+      "name": "MPD",
+      "cat": "media",
+      "glyph": "music",
+      "brand": "#5c9e31",
+      "icon": "mpd",
+      "desc": "Music Player Daemon. Plays your local library in the background; ncmpcpp and mpc drive it.",
+      "home": "https://www.musicpd.org/",
+      "docs": "https://mpd.readthedocs.io/",
+      "opt": "services.mpd",
+      "web": false,
+      "ports": {
+        "tcp": [],
+        "udp": []
+      },
+      "nix": [
+        "services.mpd = {",
+        "  enable = true;",
+        "  user = \"%%USER%%\";",
+        "  settings = {",
+        "    music_directory = \"/home/%%USER%%/Music\";",
+        "    bind_to_address = \"127.0.0.1\";",
+        "    port = 6600;",
+        "  };",
+        "};"
+      ],
+      "note": "Bound to localhost. It runs as your user so it can read your home directory - clients on other machines would need bind_to_address widening and the port opening."
     }
   ]
 }

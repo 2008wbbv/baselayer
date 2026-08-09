@@ -27,6 +27,7 @@ const cat = {
   hardware: read("hardware.json"),
   flakes: read("flakes.json"),
   bundles: read("bundles.json"),
+  logos: read("logos.json"),
 };
 
 let failures = 0;
