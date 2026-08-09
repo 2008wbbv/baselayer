@@ -1,0 +1,141 @@
+#!/bin/sh
+# baselayer installer - writes a generated NixOS configuration to disk.
+#
+#   curl -sL https://YOUR-SITE/get.txt | sh -s -- <PAYLOAD>
+#   curl -sL https://YOUR-SITE/get.txt | sh -s -- -o /mnt/etc/nixos <PAYLOAD>
+#   ... | sh -s -- -                     # read the payload from stdin instead
+#
+# The payload is the whole configuration, gzipped and base64url encoded. That
+# is why it travels on the command line: this file is served from static
+# hosting, which cannot generate a different response per visitor.
+#
+# This file is deliberately readable. Nothing here talks to the network, and
+# nothing runs as root - it only writes files into a directory you choose.
+#
+# Served as .txt because free static hosts often refuse to serve .sh files.
+
+set -eu
+
+OUTDIR="."
+FORCE=0
+PAYLOAD=""
+
+die() { printf '%s\n' "baselayer: $*" >&2; exit 1; }
+
+usage() {
+    cat <<'USAGE'
+usage: get.txt [-o DIR] [-f] PAYLOAD
+       get.txt [-o DIR] [-f] -        (payload on stdin)
+
+  -o DIR   where to write the files (default: current directory)
+  -f       overwrite files that already exist
+  -h       show this message
+USAGE
+}
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -o) [ $# -ge 2 ] || die "-o needs a directory"; OUTDIR="$2"; shift 2 ;;
+        -o*) OUTDIR="${1#-o}"; shift ;;
+        -f|--force) FORCE=1; shift ;;
+        -h|--help) usage; exit 0 ;;
+        --) shift; PAYLOAD="${1:-}"; break ;;
+        -) PAYLOAD="-"; shift ;;
+        -*) die "unknown option: $1" ;;
+        *) PAYLOAD="$1"; shift ;;
+    esac
+done
+
+[ -n "$PAYLOAD" ] || { usage >&2; die "no payload given"; }
+
+if [ "$PAYLOAD" = "-" ]; then
+    PAYLOAD=$(cat)
+fi
+
+# Strip anything that is not part of the base64url alphabet, so a payload that
+# picked up a stray newline from a copy-paste still works.
+PAYLOAD=$(printf '%s' "$PAYLOAD" | tr -d ' \t\n\r"'"'")
+
+MODE=$(printf '%s' "$PAYLOAD" | cut -c1)
+BODY=$(printf '%s' "$PAYLOAD" | cut -c2-)
+
+case "$MODE" in
+    0|1) ;;
+    *) die "this does not look like a baselayer payload" ;;
+esac
+
+for tool in base64 awk tr; do
+    command -v "$tool" >/dev/null 2>&1 || die "$tool is required but not installed"
+done
+if [ "$MODE" = 1 ]; then
+    command -v gzip >/dev/null 2>&1 || die "gzip is required to unpack this payload"
+fi
+
+# base64url -> base64, then restore the padding base64 -d expects.
+B64=$(printf '%s' "$BODY" | tr '_-' '/+')
+case $(( ${#B64} % 4 )) in
+    2) B64="$B64==" ;;
+    3) B64="$B64=" ;;
+    1) die "payload is truncated" ;;
+esac
+
+TMP=$(mktemp -d 2>/dev/null || mktemp -d -t baselayer)
+trap 'rm -rf "$TMP"' EXIT INT TERM
+
+if [ "$MODE" = 1 ]; then
+    printf '%s' "$B64" | base64 -d 2>/dev/null | gzip -dc 2>/dev/null > "$TMP/bundle" \
+        || die "could not decode the payload - was it copied in full?"
+else
+    printf '%s' "$B64" | base64 -d > "$TMP/bundle" 2>/dev/null \
+        || die "could not decode the payload - was it copied in full?"
+fi
+
+head -n1 "$TMP/bundle" | grep -q '^###baselayer/1$' \
+    || die "payload decoded, but it is not a baselayer bundle"
+
+mkdir -p "$OUTDIR" || die "cannot create $OUTDIR"
+
+# Split the bundle. Filenames are restricted to a safe set so a payload cannot
+# write outside the directory you chose.
+awk -v outdir="$OUTDIR" -v force="$FORCE" '
+    NR == 1 { next }
+    /^###FILE / {
+        name = substr($0, 9)
+        if (name !~ /^[A-Za-z0-9._-]+$/ || name ~ /^\./) {
+            printf "baselayer: refusing unsafe filename: %s\n", name > "/dev/stderr"
+            exit 1
+        }
+        path = outdir "/" name
+        if (force != 1) {
+            if ((getline probe < path) >= 0) {
+                close(path)
+                printf "baselayer: %s already exists (use -f to overwrite)\n", path > "/dev/stderr"
+                exit 1
+            }
+        }
+        current = path
+        printf "" > current
+        files[++n] = name
+        next
+    }
+    current { print >> current }
+    END {
+        for (i = 1; i <= n; i++) printf "  wrote %s/%s\n", outdir, files[i]
+    }
+' "$TMP/bundle" || die "failed while writing files"
+
+cat <<EOF
+
+Done. Next steps:
+
+  1. Keep the hardware-configuration.nix that belongs to this machine.
+     If there is not one yet:  nixos-generate-config --root /mnt
+
+  2. Review the config before applying it:
+     less $OUTDIR/configuration.nix
+
+  3. Build it:
+     sudo nixos-rebuild switch --flake $OUTDIR#HOSTNAME
+     (or, without flakes:  sudo nixos-rebuild switch -I nixos-config=$OUTDIR/configuration.nix)
+
+EOF

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>baselayer - build a NixOS configuration</title>
+<meta name="description" content="Pick a machine type, desktop, packages, self-hosted services and a security level, and get a real NixOS configuration you can download or curl straight onto the box.">
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='6' fill='%234b62d4'/><path d='M12 5l6 3.5v7L12 19l-6-3.5v-7z' fill='none' stroke='white' stroke-width='1.8' stroke-linejoin='round'/><path d='M6.2 8.7L12 12l5.8-3.3M12 12v7' fill='none' stroke='white' stroke-width='1.8' stroke-linejoin='round'/></svg>">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M12 4l7 4v8l-7 4-7-4V8z"/><path d="M5.3 8L12 11.8 18.7 8M12 11.8V20"/>
+      </svg>
+    </span>
+    <span>baselayer<br><small>NixOS configuration builder</small></span>
+  </div>
+  <div class="spacer"></div>
+  <div class="row tight" id="topbar-controls"></div>
+</header>
+
+<noscript>
+  <div style="max-width:60ch;margin:60px auto;padding:0 20px">
+    <h2>This page needs JavaScript</h2>
+    <p class="muted">The whole builder runs in your browser - there is no server to fall back to.
+    Nothing is uploaded anywhere, which is the same reason it cannot work without scripting.</p>
+    <p class="muted">If you would rather not run it, the generator lives in
+    <code>src/generate.js</code> and the catalog is plain JSON in <code>data/</code>.</p>
+  </div>
+</noscript>
+
+<main class="shell" id="shell" hidden>
+  <nav class="steps-col" aria-label="Steps">
+    <div class="steps" id="steps"></div>
+  </nav>
+  <section class="main-col" id="main" aria-live="polite"></section>
+  <aside class="preview-col">
+    <div class="panel preview" id="preview"></div>
+  </aside>
+</main>
+
+<div id="boot" style="max-width:60ch;margin:80px auto;padding:0 20px;text-align:center">
+  <span class="spin"></span>
+  <p class="muted" style="margin-top:12px">Loading the catalog…</p>
+</div>
+
+<div class="footer-bar" id="footer" hidden></div>
+
+<script type="module" src="src/app.js"></script>
+</body>
+</html>
