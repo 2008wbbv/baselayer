@@ -242,12 +242,25 @@
       "desc": "Refuse to load DCCP, SCTP, RDS, TIPC and other rarely used protocol modules.",
       "impact": "low",
       "docs": "https://wiki.nixos.org/wiki/Security",
-      "nix": [
-        "boot.blacklistedKernelModules = [",
-        "  \"dccp\" \"sctp\" \"rds\" \"tipc\" \"n-hdlc\" \"ax25\" \"netrom\" \"x25\"",
-        "  \"rose\" \"decnet\" \"econet\" \"af_802154\" \"ipx\" \"appletalk\" \"psnap\"",
-        "];"
-      ]
+      "contributes": {
+        "boot.blacklistedKernelModules": [
+          "dccp",
+          "sctp",
+          "rds",
+          "tipc",
+          "n-hdlc",
+          "ax25",
+          "netrom",
+          "x25",
+          "rose",
+          "decnet",
+          "econet",
+          "af_802154",
+          "ipx",
+          "appletalk",
+          "psnap"
+        ]
+      }
     },
     {
       "id": "blacklist-fs-modules",
@@ -256,11 +269,16 @@
       "impact": "high",
       "warn": "Blacklisting udf stops optical media mounting, and squashfs is not blacklisted here precisely because AppImage and snap need it.",
       "docs": "https://wiki.nixos.org/wiki/Security",
-      "nix": [
-        "boot.blacklistedKernelModules = [",
-        "  \"cramfs\" \"freevxfs\" \"jffs2\" \"hfs\" \"hfsplus\" \"udf\"",
-        "];"
-      ]
+      "contributes": {
+        "boot.blacklistedKernelModules": [
+          "cramfs",
+          "freevxfs",
+          "jffs2",
+          "hfs",
+          "hfsplus",
+          "udf"
+        ]
+      }
     },
     {
       "id": "hardened-kernel",

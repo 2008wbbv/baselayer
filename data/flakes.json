@@ -1,11 +1,11 @@
 {
-  "$comment": "Extra flake inputs from GitHub. Only offered when the output format is a flake. 'module' is added to the modules list of the nixosConfiguration. @REL@ is replaced with the release branch for the selected channel.",
+  "$comment": "Extra flake inputs from GitHub. Only offered when the output format is a flake. 'module' is added to the modules list of the nixosConfiguration. %%REL%% is replaced with the release branch for the selected channel.",
   "items": [
     {
       "id": "home-manager",
       "name": "Home Manager",
       "owner": "nix-community/home-manager",
-      "url": "github:nix-community/home-manager/release-@REL@",
+      "url": "github:nix-community/home-manager/release-%%REL%%",
       "urlByChannel": { "unstable": "github:nix-community/home-manager" },
       "brand": "#5277c3",
       "glyph": "home",
@@ -18,7 +18,7 @@
         "home-manager = {",
         "  useGlobalPkgs = true;",
         "  useUserPackages = true;",
-        "  users.@USER@ = import ./home.nix;",
+        "  users.%%USER%% = import ./home.nix;",
         "  backupFileExtension = \"hm-bak\";",
         "};"
       ],
@@ -99,7 +99,7 @@
       "id": "stylix",
       "name": "Stylix",
       "owner": "nix-community/stylix",
-      "url": "github:nix-community/stylix/release-@REL@",
+      "url": "github:nix-community/stylix/release-%%REL%%",
       "urlByChannel": { "unstable": "github:nix-community/stylix" },
       "brand": "#a855f7",
       "glyph": "palette",

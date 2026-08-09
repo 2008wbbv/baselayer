@@ -2063,6 +2063,28 @@
       "home": "https://ollama.com/",
       "docs": "https://github.com/ollama/ollama/tree/main/docs",
       "module": "services.ollama.enable = true;"
+    },
+    {
+      "id": "lazydocker",
+      "attr": "lazydocker",
+      "name": "lazydocker",
+      "cat": "dev",
+      "glyph": "box",
+      "brand": "#2496ed",
+      "desc": "Terminal UI for Docker and Compose - logs, stats and shells in one view.",
+      "home": "https://github.com/jesseduffield/lazydocker",
+      "docs": "https://github.com/jesseduffield/lazydocker#usage"
+    },
+    {
+      "id": "imagemagick",
+      "attr": "imagemagick",
+      "name": "ImageMagick",
+      "cat": "creative",
+      "glyph": "image",
+      "brand": "#c1272d",
+      "desc": "Command line image conversion, resizing and compositing.",
+      "home": "https://imagemagick.org/",
+      "docs": "https://imagemagick.org/script/command-line-processing.php"
     }
   ]
 }

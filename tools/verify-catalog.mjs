@@ -174,7 +174,7 @@ function collect(channel) {
     for (const p of extractPaths(lines))
       if (NAMESPACES.test(p) && !opts.has(p)) opts.set(p, who);
   };
-  const pick = (item) => (item.nixByChannel && item.nixByChannel[channel]) || item.nix;
+  const pick = (item) => (item.nixByChannel && item.nixByChannel[channel]) || item.nix || [];
 
   for (const s of services.items) add(pick(s), `service:${s.id}`);
   for (const t of security.toggles) add(pick(t), `security:${t.id}`);

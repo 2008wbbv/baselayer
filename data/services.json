@@ -471,7 +471,7 @@
         "services.nextcloud = {",
         "  enable = true;",
         "  package = pkgs.nextcloud31;",
-        "  hostName = \"@DOMAIN@\";",
+        "  hostName = \"%%DOMAIN%%\";",
         "  https = true;",
         "  database.createLocally = true;",
         "  configureRedis = true;",
@@ -481,7 +481,7 @@
         "    adminuser = \"admin\";",
         "    adminpassFile = \"/var/lib/nextcloud-admin-pass\";",
         "  };",
-        "  settings.trusted_domains = [ \"@DOMAIN@\" ];",
+        "  settings.trusted_domains = [ \"%%DOMAIN%%\" ];",
         "};"
       ],
       "secrets": [
@@ -523,9 +523,9 @@
         "  enable = true;",
         "  openDefaultPorts = true;",
         "  guiAddress = \"0.0.0.0:8384\";",
-        "  user = \"@USER@\";",
-        "  dataDir = \"/home/@USER@/Sync\";",
-        "  configDir = \"/home/@USER@/.config/syncthing\";",
+        "  user = \"%%USER%%\";",
+        "  dataDir = \"/home/%%USER%%/Sync\";",
+        "  configDir = \"/home/%%USER%%/.config/syncthing\";",
         "};"
       ],
       "note": "The GUI has no password by default. Set one immediately, or bind it to 127.0.0.1 and reach it over SSH."
@@ -557,7 +557,7 @@
         "  settings = {",
         "    global = {",
         "      \"workgroup\" = \"WORKGROUP\";",
-        "      \"server string\" = \"@HOSTNAME@\";",
+        "      \"server string\" = \"%%HOSTNAME%%\";",
         "      \"security\" = \"user\";",
         "      \"map to guest\" = \"never\";",
         "    };",
@@ -604,7 +604,7 @@
         "  passwordFile = \"/var/lib/paperless/admin-pass\";",
         "  settings = {",
         "    PAPERLESS_OCR_LANGUAGE = \"eng\";",
-        "    PAPERLESS_TIME_ZONE = \"@TIMEZONE@\";",
+        "    PAPERLESS_TIME_ZONE = \"%%TIMEZONE%%\";",
         "  };",
         "};"
       ],
@@ -740,7 +740,7 @@
         "  enable = true;",
         "  address = \"0.0.0.0\";",
         "  port = 8085;",
-        "  settings.server_url = \"https://@DOMAIN@\";",
+        "  settings.server_url = \"https://%%DOMAIN%%\";",
         "};"
       ]
     },
@@ -827,8 +827,8 @@
         "  database.type = \"postgres\";",
         "  settings = {",
         "    server = {",
-        "      DOMAIN = \"@DOMAIN@\";",
-        "      ROOT_URL = \"https://@DOMAIN@/\";",
+        "      DOMAIN = \"%%DOMAIN%%\";",
+        "      ROOT_URL = \"https://%%DOMAIN%%/\";",
         "      HTTP_ADDR = \"0.0.0.0\";",
         "      HTTP_PORT = 3030;",
         "    };",
@@ -861,8 +861,8 @@
         "  enable = true;",
         "  database.type = \"postgres\";",
         "  settings.server = {",
-        "    DOMAIN = \"@DOMAIN@\";",
-        "    ROOT_URL = \"https://@DOMAIN@/\";",
+        "    DOMAIN = \"%%DOMAIN%%\";",
+        "    ROOT_URL = \"https://%%DOMAIN%%/\";",
         "    HTTP_ADDR = \"0.0.0.0\";",
         "    HTTP_PORT = 3031;",
         "  };",
@@ -922,7 +922,7 @@
         "  host = \"0.0.0.0\";",
         "  port = 4444;",
         "  auth = \"password\";",
-        "  hashedPassword = \"@ARGON2_HASH@\";",
+        "  hashedPassword = \"%%ARGON2_HASH%%\";",
         "};"
       ],
       "secrets": [
@@ -932,7 +932,7 @@
           "cmd": "nix run nixpkgs#libargon2 -- \"$(head -c16 /dev/urandom | base64)\" -e <<< 'your-password'"
         }
       ],
-      "note": "Replace @ARGON2_HASH@ with the output of the command above before rebuilding."
+      "note": "Replace %%ARGON2_HASH%% with the output of the command above before rebuilding."
     },
     {
       "id": "prometheus",
@@ -992,7 +992,7 @@
         "  settings.server = {",
         "    http_addr = \"0.0.0.0\";",
         "    http_port = 3010;",
-        "    domain = \"@DOMAIN@\";",
+        "    domain = \"%%DOMAIN%%\";",
         "  };",
         "};"
       ],
@@ -1078,7 +1078,7 @@
         "    default_config = {};",
         "    homeassistant = {",
         "      name = \"Home\";",
-        "      time_zone = \"@TIMEZONE@\";",
+        "      time_zone = \"%%TIMEZONE%%\";",
         "      unit_system = \"metric\";",
         "    };",
         "    http = {",
@@ -1185,7 +1185,7 @@
         "services.vaultwarden = {",
         "  enable = true;",
         "  config = {",
-        "    DOMAIN = \"https://@DOMAIN@\";",
+        "    DOMAIN = \"https://%%DOMAIN%%\";",
         "    ROCKET_ADDRESS = \"0.0.0.0\";",
         "    ROCKET_PORT = 8222;",
         "    SIGNUPS_ALLOWED = false;",
@@ -1232,7 +1232,7 @@
         "    theme = \"dark\";",
         "    server.address = \"tcp://0.0.0.0:9092\";",
         "    authentication_backend.file.path = \"/var/lib/authelia-main/users.yml\";",
-        "    session.cookies = [{ domain = \"@BASEDOMAIN@\"; authelia_url = \"https://auth.@BASEDOMAIN@\"; }];",
+        "    session.cookies = [{ domain = \"%%BASEDOMAIN%%\"; authelia_url = \"https://auth.%%BASEDOMAIN%%\"; }];",
         "    storage.local.path = \"/var/lib/authelia-main/db.sqlite3\";",
         "    notifier.filesystem.filename = \"/var/lib/authelia-main/notification.txt\";",
         "    access_control.default_policy = \"two_factor\";",
@@ -1278,6 +1278,7 @@
       "nix": [
         "services.searx = {",
         "  enable = true;",
+        "  environmentFile = \"/var/lib/searx/env\";",
         "  settings = {",
         "    server = {",
         "      port = 8888;",
@@ -1288,7 +1289,13 @@
         "  };",
         "};"
       ],
-      "note": "Replace @SEARX_SECRET@ with the output of `head -c32 /dev/urandom | base64`, or move it into environmentFile."
+      "secrets": [
+        {
+          "path": "/var/lib/searx/env",
+          "desc": "SEARX_SECRET - the module substitutes it into secret_key at runtime",
+          "cmd": "mkdir -p /var/lib/searx && echo \"SEARX_SECRET=$(head -c32 /dev/urandom | base64)\" > /var/lib/searx/env && chmod 600 /var/lib/searx/env"
+        }
+      ]
     },
     {
       "id": "miniflux",
@@ -1314,7 +1321,7 @@
         "  adminCredentialsFile = \"/var/lib/miniflux/admin\";",
         "  config = {",
         "    LISTEN_ADDR = \"0.0.0.0:8071\";",
-        "    BASE_URL = \"https://@DOMAIN@/\";",
+        "    BASE_URL = \"https://%%DOMAIN%%/\";",
         "  };",
         "};"
       ],
@@ -1348,7 +1355,7 @@
         "services.vikunja = {",
         "  enable = true;",
         "  frontendScheme = \"https\";",
-        "  frontendHostname = \"@DOMAIN@\";",
+        "  frontendHostname = \"%%DOMAIN%%\";",
         "  port = 3456;",
         "};"
       ]
@@ -1375,7 +1382,7 @@
         "services.hedgedoc = {",
         "  enable = true;",
         "  settings = {",
-        "    domain = \"@DOMAIN@\";",
+        "    domain = \"%%DOMAIN%%\";",
         "    host = \"0.0.0.0\";",
         "    port = 3040;",
         "    protocolUseSSL = true;",
@@ -1407,7 +1414,7 @@
         "  enable = true;",
         "  settings = {",
         "    listen-http = \":2586\";",
-        "    base-url = \"https://@DOMAIN@\";",
+        "    base-url = \"https://%%DOMAIN%%\";",
         "    behind-proxy = true;",
         "  };",
         "};"
@@ -1435,7 +1442,7 @@
         "services.homepage-dashboard = {",
         "  enable = true;",
         "  listenPort = 8082;",
-        "  allowedHosts = \"@DOMAIN@,localhost:8082\";",
+        "  allowedHosts = \"%%DOMAIN%%,localhost:8082\";",
         "};"
       ]
     },
@@ -1594,7 +1601,7 @@
         "    difficulty = \"normal\";",
         "    gamemode = \"survival\";",
         "    max-players = 10;",
-        "    motd = \"@HOSTNAME@\";",
+        "    motd = \"%%HOSTNAME%%\";",
         "    white-list = true;",
         "  };",
         "};"
@@ -1621,13 +1628,12 @@
         "services.printing = {",
         "  enable = true;",
         "  drivers = [ pkgs.gutenprint pkgs.hplip ];",
-        "};",
-        "services.avahi = {",
-        "  enable = true;",
-        "  nssmdns4 = true;",
-        "  openFirewall = true;",
         "};"
-      ]
+      ],
+      "needs": [
+        "avahi"
+      ],
+      "note": "Driverless IPP discovery needs mDNS, so this pulls in Avahi as well."
     },
     {
       "id": "restic-backup",
@@ -1782,8 +1788,8 @@
       "nix": [
         "services.freshrss = {",
         "  enable = true;",
-        "  baseUrl = \"https://@DOMAIN@\";",
-        "  virtualHost = \"@DOMAIN@\";",
+        "  baseUrl = \"https://%%DOMAIN%%\";",
+        "  virtualHost = \"%%DOMAIN%%\";",
         "  defaultUser = \"admin\";",
         "  passwordFile = \"/var/lib/freshrss/password\";",
         "};"
@@ -1825,7 +1831,7 @@
         "  port = 9000;",
         "  settings = {",
         "    ALLOW_SIGNUP = \"false\";",
-        "    TZ = \"@TIMEZONE@\";",
+        "    TZ = \"%%TIMEZONE%%\";",
         "  };",
         "};"
       ]

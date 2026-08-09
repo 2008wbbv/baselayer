@@ -218,7 +218,7 @@
       "nix": [
         "boot.supportedFilesystems = [ \"zfs\" ];",
         "boot.zfs.forceImportRoot = false;",
-        "networking.hostId = \"@HOSTID@\";",
+        "networking.hostId = \"%%HOSTID%%\";",
         "services.zfs.autoScrub.enable = true;",
         "services.zfs.trim.enable = true;"
       ],
@@ -276,10 +276,7 @@
         "services.power-profiles-daemon.enable = true;",
         "powerManagement.enable = true;",
         "services.logind.settings.Login.HandleLidSwitch = \"suspend\";",
-        "hardware.bluetooth = {",
-        "  enable = true;",
-        "  powerOnBoot = false;",
-        "};"
+        "services.logind.settings.Login.HandleLidSwitchExternalPower = \"lock\";"
       ]
     },
     {
@@ -302,8 +299,7 @@
       "desc": "Wakes for the remote, never sleeps mid-film.",
       "nix": [
         "services.logind.settings.Login.HandleLidSwitch = \"ignore\";",
-        "powerManagement.cpuFreqGovernor = \"ondemand\";",
-        "hardware.bluetooth.enable = true;"
+        "powerManagement.cpuFreqGovernor = \"ondemand\";"
       ]
     },
     {
