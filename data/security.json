@@ -1,0 +1,414 @@
+{
+  "$comment": "Security is modelled as a set of independent toggles. A 'level' is just a preset that switches a group of them on, so you can pick a level and then adjust anything individually.",
+  "levels": [
+    {
+      "id": "relaxed",
+      "name": "Relaxed",
+      "score": 1,
+      "brand": "#64748b",
+      "desc": "Stock NixOS defaults. The firewall is on and nothing else gets in your way.",
+      "bestFor": "Single-user desktops that never expose a port to the internet.",
+      "toggles": [
+        "firewall"
+      ]
+    },
+    {
+      "id": "baseline",
+      "name": "Baseline",
+      "score": 2,
+      "brand": "#0ea5e9",
+      "desc": "Sensible hygiene for a machine that other people can reach. Key-only SSH, brute-force protection, tighter sudo.",
+      "bestFor": "Home servers, VPS boxes, anything with SSH open.",
+      "toggles": [
+        "firewall",
+        "ssh-hardening",
+        "fail2ban",
+        "sudo-wheel-only",
+        "nix-allowed-users",
+        "auto-upgrade"
+      ]
+    },
+    {
+      "id": "hardened",
+      "name": "Hardened",
+      "score": 3,
+      "brand": "#f59e0b",
+      "desc": "Kernel and userspace hardening on top of the baseline. Some observability tools and debuggers stop working.",
+      "bestFor": "Internet-facing servers and workstations holding sensitive data.",
+      "toggles": [
+        "firewall",
+        "ssh-hardening",
+        "fail2ban",
+        "sudo-wheel-only",
+        "nix-allowed-users",
+        "auto-upgrade",
+        "apparmor",
+        "sysctl-hardening",
+        "protect-kernel-image",
+        "no-coredumps",
+        "blacklist-net-modules",
+        "dns-over-tls"
+      ]
+    },
+    {
+      "id": "paranoid",
+      "name": "Paranoid",
+      "score": 4,
+      "brand": "#ef4444",
+      "desc": "Hardened kernel, module locking, SMT disabled, device control and auditing. This will break things - read every warning.",
+      "bestFor": "Threat models where you would rather lose a feature than lose the machine.",
+      "toggles": [
+        "firewall",
+        "ssh-hardening",
+        "fail2ban",
+        "sudo-wheel-only",
+        "nix-allowed-users",
+        "apparmor",
+        "sysctl-hardening",
+        "protect-kernel-image",
+        "no-coredumps",
+        "blacklist-net-modules",
+        "dns-over-tls",
+        "hardened-kernel",
+        "lock-kernel-modules",
+        "disable-smt",
+        "blacklist-fs-modules",
+        "firejail",
+        "auditd",
+        "mac-randomization"
+      ]
+    }
+  ],
+  "toggles": [
+    {
+      "id": "firewall",
+      "name": "Firewall",
+      "desc": "Deny all inbound traffic except the ports your selected services need.",
+      "impact": "none",
+      "docs": "https://wiki.nixos.org/wiki/Firewall",
+      "nix": [
+        "networking.firewall.enable = true;"
+      ]
+    },
+    {
+      "id": "ssh-hardening",
+      "name": "SSH: keys only, no root",
+      "desc": "Disable password and keyboard-interactive login, and refuse direct root logins.",
+      "impact": "low",
+      "warn": "Add your public key under users.users.<name>.openssh.authorizedKeys.keys before you reboot, or you will lock yourself out.",
+      "docs": "https://wiki.nixos.org/wiki/SSH",
+      "nix": [
+        "services.openssh = {",
+        "  enable = true;",
+        "  settings = {",
+        "    PasswordAuthentication = false;",
+        "    KbdInteractiveAuthentication = false;",
+        "    PermitRootLogin = \"no\";",
+        "    X11Forwarding = false;",
+        "  };",
+        "};"
+      ]
+    },
+    {
+      "id": "fail2ban",
+      "name": "fail2ban",
+      "desc": "Ban IP addresses that repeatedly fail authentication.",
+      "impact": "none",
+      "docs": "https://search.nixos.org/options?query=services.fail2ban",
+      "nix": [
+        "services.fail2ban = {",
+        "  enable = true;",
+        "  maxretry = 5;",
+        "  bantime = \"1h\";",
+        "  ignoreIP = [ \"127.0.0.0/8\" \"10.0.0.0/8\" \"192.168.0.0/16\" \"172.16.0.0/12\" ];",
+        "};"
+      ]
+    },
+    {
+      "id": "sudo-wheel-only",
+      "name": "Restrict sudo to wheel",
+      "desc": "Only members of the wheel group may run sudo at all.",
+      "impact": "low",
+      "docs": "https://search.nixos.org/options?query=security.sudo",
+      "nix": [
+        "security.sudo.execWheelOnly = true;",
+        "security.sudo.wheelNeedsPassword = true;"
+      ]
+    },
+    {
+      "id": "doas",
+      "name": "Use doas instead of sudo",
+      "desc": "Replace sudo with OpenBSD's doas, which has a far smaller attack surface.",
+      "impact": "medium",
+      "warn": "Scripts and tooling that shell out to `sudo` will stop working unless you keep a compatibility alias.",
+      "conflicts": [
+        "sudo-wheel-only"
+      ],
+      "docs": "https://wiki.nixos.org/wiki/Doas",
+      "nix": [
+        "security.sudo.enable = false;",
+        "security.doas = {",
+        "  enable = true;",
+        "  extraRules = [{ groups = [ \"wheel\" ]; keepEnv = true; persist = true; }];",
+        "};"
+      ]
+    },
+    {
+      "id": "nix-allowed-users",
+      "name": "Restrict the Nix daemon",
+      "desc": "Only wheel members may talk to the Nix daemon and build derivations.",
+      "impact": "low",
+      "docs": "https://search.nixos.org/options?query=nix.settings.allowed-users",
+      "nix": [
+        "nix.settings.allowed-users = [ \"@wheel\" ];"
+      ]
+    },
+    {
+      "id": "apparmor",
+      "name": "AppArmor",
+      "desc": "Load AppArmor mandatory access control profiles at boot.",
+      "impact": "low",
+      "docs": "https://wiki.nixos.org/wiki/AppArmor",
+      "nix": [
+        "security.apparmor.enable = true;",
+        "security.apparmor.packages = [ pkgs.apparmor-profiles ];"
+      ]
+    },
+    {
+      "id": "sysctl-hardening",
+      "name": "Kernel sysctl hardening",
+      "desc": "Hide kernel pointers and dmesg, restrict ptrace, and turn on the usual network anti-spoofing knobs.",
+      "impact": "medium",
+      "warn": "ptrace_scope = 1 stops debuggers attaching to processes you did not start. Game anti-cheat and some profilers dislike this.",
+      "docs": "https://wiki.nixos.org/wiki/Security",
+      "nix": [
+        "boot.kernel.sysctl = {",
+        "  \"kernel.kptr_restrict\" = 2;",
+        "  \"kernel.dmesg_restrict\" = 1;",
+        "  \"kernel.yama.ptrace_scope\" = 1;",
+        "  \"kernel.unprivileged_bpf_disabled\" = 1;",
+        "  \"net.core.bpf_jit_harden\" = 2;",
+        "  \"net.ipv4.conf.all.rp_filter\" = 1;",
+        "  \"net.ipv4.conf.default.rp_filter\" = 1;",
+        "  \"net.ipv4.conf.all.accept_redirects\" = 0;",
+        "  \"net.ipv4.conf.all.send_redirects\" = 0;",
+        "  \"net.ipv4.conf.all.accept_source_route\" = 0;",
+        "  \"net.ipv6.conf.all.accept_redirects\" = 0;",
+        "  \"net.ipv4.tcp_syncookies\" = 1;",
+        "  \"fs.protected_hardlinks\" = 1;",
+        "  \"fs.protected_symlinks\" = 1;",
+        "  \"fs.suid_dumpable\" = 0;",
+        "};"
+      ]
+    },
+    {
+      "id": "protect-kernel-image",
+      "name": "Protect the kernel image",
+      "desc": "Prevent replacing the running kernel and disable hibernation.",
+      "impact": "medium",
+      "warn": "Hibernation (suspend-to-disk) stops working. Suspend-to-RAM is unaffected.",
+      "docs": "https://search.nixos.org/options?query=security.protectKernelImage",
+      "nix": [
+        "security.protectKernelImage = true;"
+      ]
+    },
+    {
+      "id": "lock-kernel-modules",
+      "name": "Lock kernel modules",
+      "desc": "Refuse to load any kernel module after boot has finished.",
+      "impact": "high",
+      "warn": "Hot-plugged hardware that needs a module not loaded during boot will not work. VirtualBox, some VPNs and external GPUs break.",
+      "docs": "https://search.nixos.org/options?query=security.lockKernelModules",
+      "nix": [
+        "security.lockKernelModules = true;"
+      ]
+    },
+    {
+      "id": "no-coredumps",
+      "name": "Disable core dumps",
+      "desc": "Stop the kernel writing process memory to disk when something crashes.",
+      "impact": "low",
+      "docs": "https://search.nixos.org/options?query=systemd.coredump",
+      "nix": [
+        "systemd.coredump.enable = false;",
+        "security.pam.loginLimits = [",
+        "  { domain = \"*\"; item = \"core\"; type = \"hard\"; value = \"0\"; }",
+        "];"
+      ]
+    },
+    {
+      "id": "blacklist-net-modules",
+      "name": "Blacklist obscure network protocols",
+      "desc": "Refuse to load DCCP, SCTP, RDS, TIPC and other rarely used protocol modules.",
+      "impact": "low",
+      "docs": "https://wiki.nixos.org/wiki/Security",
+      "nix": [
+        "boot.blacklistedKernelModules = [",
+        "  \"dccp\" \"sctp\" \"rds\" \"tipc\" \"n-hdlc\" \"ax25\" \"netrom\" \"x25\"",
+        "  \"rose\" \"decnet\" \"econet\" \"af_802154\" \"ipx\" \"appletalk\" \"psnap\"",
+        "];"
+      ]
+    },
+    {
+      "id": "blacklist-fs-modules",
+      "name": "Blacklist legacy filesystems",
+      "desc": "Refuse to load cramfs, freevxfs, jffs2, hfs, udf and friends.",
+      "impact": "high",
+      "warn": "Blacklisting udf stops optical media mounting, and squashfs is not blacklisted here precisely because AppImage and snap need it.",
+      "docs": "https://wiki.nixos.org/wiki/Security",
+      "nix": [
+        "boot.blacklistedKernelModules = [",
+        "  \"cramfs\" \"freevxfs\" \"jffs2\" \"hfs\" \"hfsplus\" \"udf\"",
+        "];"
+      ]
+    },
+    {
+      "id": "hardened-kernel",
+      "name": "Hardened kernel",
+      "desc": "Build on the linux-hardened patch set with stricter defaults throughout.",
+      "impact": "high",
+      "warn": "Incompatible with the proprietary NVIDIA driver, ZFS and VirtualBox, and measurably slower. Do not use this on a gaming machine.",
+      "conflicts": [
+        "gpu-nvidia",
+        "fs-zfs"
+      ],
+      "docs": "https://wiki.nixos.org/wiki/Linux_kernel",
+      "nix": [
+        "boot.kernelPackages = pkgs.linuxPackages_hardened;"
+      ]
+    },
+    {
+      "id": "disable-smt",
+      "name": "Disable SMT / Hyper-Threading",
+      "desc": "Mitigates the whole family of cross-thread side-channel attacks.",
+      "impact": "high",
+      "warn": "You lose roughly a third of your multi-threaded CPU performance.",
+      "docs": "https://search.nixos.org/options?query=security.allowSimultaneousMultithreading",
+      "nix": [
+        "security.allowSimultaneousMultithreading = false;"
+      ]
+    },
+    {
+      "id": "usbguard",
+      "name": "USBGuard",
+      "desc": "Block USB devices that were not present at boot until you explicitly allow them.",
+      "impact": "high",
+      "warn": "Configured here to allow already-connected devices so you do not lose your keyboard. Newly plugged devices are blocked until authorised with `usbguard allow-device`.",
+      "docs": "https://wiki.nixos.org/wiki/USBGuard",
+      "nix": [
+        "services.usbguard = {",
+        "  enable = true;",
+        "  dbus.enable = true;",
+        "  implicitPolicyTarget = \"block\";",
+        "  presentDevicePolicy = \"allow\";",
+        "};"
+      ]
+    },
+    {
+      "id": "firejail",
+      "name": "Firejail",
+      "desc": "Namespace sandbox for individual applications.",
+      "impact": "low",
+      "docs": "https://wiki.nixos.org/wiki/Firejail",
+      "nix": [
+        "programs.firejail.enable = true;"
+      ]
+    },
+    {
+      "id": "auditd",
+      "name": "Audit daemon",
+      "desc": "Log every execve system call to the kernel audit log.",
+      "impact": "medium",
+      "warn": "Produces a lot of log volume on a busy machine.",
+      "docs": "https://search.nixos.org/options?query=security.auditd",
+      "nix": [
+        "security.auditd.enable = true;",
+        "security.audit = {",
+        "  enable = true;",
+        "  rules = [ \"-a exit,always -F arch=b64 -S execve\" ];",
+        "};"
+      ]
+    },
+    {
+      "id": "dns-over-tls",
+      "name": "DNS over TLS",
+      "desc": "Resolve names through systemd-resolved with DNSSEC and encrypted transport.",
+      "impact": "low",
+      "warn": "Captive portals on public wifi often fail until you temporarily relax this.",
+      "docs": "https://wiki.nixos.org/wiki/Systemd/resolved",
+      "nix": [
+        "services.resolved = {",
+        "  enable = true;",
+        "  settings.Resolve = {",
+        "    DNSSEC = \"true\";",
+        "    DNSOverTLS = \"true\";",
+        "    DNS = \"1.1.1.1#cloudflare-dns.com 9.9.9.9#dns.quad9.net\";",
+        "  };",
+        "};"
+      ],
+      "nixByChannel": {
+        "25.11": [
+          "services.resolved = {",
+          "  enable = true;",
+          "  dnssec = \"true\";",
+          "  dnsovertls = \"true\";",
+          "  fallbackDns = [ \"1.1.1.1#cloudflare-dns.com\" \"9.9.9.9#dns.quad9.net\" ];",
+          "};"
+        ]
+      }
+    },
+    {
+      "id": "mac-randomization",
+      "name": "Randomise wifi MAC",
+      "desc": "Present a different hardware address to every network you join.",
+      "impact": "low",
+      "warn": "Networks that authorise you by MAC address, and some captive portals, will stop recognising the machine.",
+      "requires": "networkmanager",
+      "docs": "https://wiki.nixos.org/wiki/NetworkManager",
+      "nix": [
+        "networking.networkmanager.wifi.macAddress = \"random\";",
+        "networking.networkmanager.ethernet.macAddress = \"preserve\";"
+      ]
+    },
+    {
+      "id": "clamav",
+      "name": "ClamAV",
+      "desc": "On-demand virus scanner with an auto-updating signature database.",
+      "impact": "low",
+      "docs": "https://wiki.nixos.org/wiki/ClamAV",
+      "nix": [
+        "services.clamav = {",
+        "  daemon.enable = true;",
+        "  updater.enable = true;",
+        "};"
+      ]
+    },
+    {
+      "id": "opensnitch",
+      "name": "OpenSnitch",
+      "desc": "Interactive outbound application firewall - prompts when a program phones home.",
+      "impact": "medium",
+      "warn": "The daemon only. Run the opensnitch-ui package in your desktop session to get the prompts.",
+      "docs": "https://search.nixos.org/options?query=services.opensnitch",
+      "nix": [
+        "services.opensnitch.enable = true;"
+      ]
+    },
+    {
+      "id": "auto-upgrade",
+      "name": "Automatic upgrades",
+      "desc": "Rebuild nightly against the channel or flake so security fixes land without you.",
+      "impact": "low",
+      "warn": "Unattended upgrades can pull in a broken package. Keep allowReboot off unless the machine is genuinely disposable.",
+      "docs": "https://search.nixos.org/options?query=system.autoUpgrade",
+      "nix": [
+        "system.autoUpgrade = {",
+        "  enable = true;",
+        "  allowReboot = false;",
+        "  dates = \"04:00\";",
+        "  randomizedDelaySec = \"45min\";",
+        "};"
+      ]
+    }
+  ]
+}

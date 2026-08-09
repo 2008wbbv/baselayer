@@ -1,0 +1,482 @@
+{
+  "$comment": "Desktop environments and window managers. 'nix' lines are emitted verbatim into configuration.nix. needsXserver pulls in services.xserver.enable.",
+  "items": [
+    {
+      "id": "none",
+      "name": "None (headless)",
+      "kind": "none",
+      "brand": "#6b7280",
+      "glyph": "terminal",
+      "desc": "No graphical session at all. The right choice for servers, VMs and anything you only ever reach over SSH.",
+      "home": "https://nixos.org",
+      "docs": "https://nixos.org/manual/nixos/stable/#ch-installation",
+      "wayland": false,
+      "x11": false,
+      "needsXserver": false,
+      "dm": "none",
+      "nix": [],
+      "packages": []
+    },
+    {
+      "id": "gnome",
+      "name": "GNOME",
+      "kind": "de",
+      "session": "gnome",
+      "brand": "#4a86cf",
+      "glyph": "desktop",
+      "desc": "The default GNOME desktop. Wayland by default, heavily integrated, very little configuration required.",
+      "home": "https://www.gnome.org/",
+      "docs": "https://wiki.nixos.org/wiki/GNOME",
+      "wayland": true,
+      "x11": true,
+      "needsXserver": true,
+      "dm": "gdm",
+      "ram": "high",
+      "nix": [
+        "services.desktopManager.gnome.enable = true;"
+      ],
+      "excludeOption": "environment.gnome.excludePackages",
+      "excludeDefaults": [
+        "gnome-tour",
+        "gnome-connections",
+        "epiphany",
+        "geary",
+        "gnome-maps",
+        "gnome-music",
+        "totem"
+      ],
+      "packages": [
+        "gnome-tweaks"
+      ]
+    },
+    {
+      "id": "plasma6",
+      "name": "KDE Plasma 6",
+      "kind": "de",
+      "session": "plasma",
+      "brand": "#1d99f3",
+      "glyph": "desktop",
+      "desc": "KDE Plasma 6 on Wayland. Extremely configurable, ships a full application suite.",
+      "home": "https://kde.org/plasma-desktop/",
+      "docs": "https://wiki.nixos.org/wiki/KDE",
+      "wayland": true,
+      "x11": true,
+      "needsXserver": false,
+      "dm": "sddm",
+      "ram": "high",
+      "nix": [
+        "services.desktopManager.plasma6.enable = true;"
+      ],
+      "excludeOption": "environment.plasma6.excludePackages",
+      "excludeDefaults": [
+        "elisa",
+        "khelpcenter",
+        "konversation"
+      ],
+      "excludePrefix": "kdePackages.",
+      "packages": []
+    },
+    {
+      "id": "cosmic",
+      "name": "COSMIC",
+      "kind": "de",
+      "session": "cosmic",
+      "brand": "#ff7300",
+      "glyph": "desktop",
+      "desc": "System76's Rust desktop. Modern and fast, but still young - expect rough edges.",
+      "home": "https://system76.com/cosmic/",
+      "docs": "https://wiki.nixos.org/wiki/COSMIC",
+      "wayland": true,
+      "x11": false,
+      "needsXserver": false,
+      "dm": "cosmic-greeter",
+      "ram": "medium",
+      "channels": [
+        "unstable"
+      ],
+      "nix": [
+        "services.desktopManager.cosmic.enable = true;"
+      ],
+      "packages": []
+    },
+    {
+      "id": "xfce",
+      "name": "Xfce",
+      "kind": "de",
+      "session": "xfce",
+      "brand": "#2284f2",
+      "glyph": "desktop",
+      "desc": "Light, stable and conventional. Excellent on old hardware and in virtual machines.",
+      "home": "https://xfce.org/",
+      "docs": "https://wiki.nixos.org/wiki/Xfce",
+      "wayland": false,
+      "x11": true,
+      "needsXserver": true,
+      "dm": "lightdm",
+      "ram": "low",
+      "nix": [
+        "services.xserver.desktopManager.xfce.enable = true;"
+      ],
+      "packages": []
+    },
+    {
+      "id": "cinnamon",
+      "name": "Cinnamon",
+      "kind": "de",
+      "session": "cinnamon",
+      "brand": "#dc682e",
+      "glyph": "desktop",
+      "desc": "The Linux Mint desktop. Traditional layout, friendly defaults, gentle learning curve.",
+      "home": "https://projects.linuxmint.com/cinnamon/",
+      "docs": "https://wiki.nixos.org/wiki/Cinnamon",
+      "wayland": false,
+      "x11": true,
+      "needsXserver": true,
+      "dm": "lightdm",
+      "ram": "medium",
+      "nix": [
+        "services.xserver.desktopManager.cinnamon.enable = true;"
+      ],
+      "packages": []
+    },
+    {
+      "id": "mate",
+      "name": "MATE",
+      "kind": "de",
+      "session": "mate",
+      "brand": "#87a556",
+      "glyph": "desktop",
+      "desc": "A continuation of GNOME 2. Classic two-panel desktop, very predictable.",
+      "home": "https://mate-desktop.org/",
+      "docs": "https://wiki.nixos.org/wiki/MATE",
+      "wayland": false,
+      "x11": true,
+      "needsXserver": true,
+      "dm": "lightdm",
+      "ram": "low",
+      "nix": [
+        "services.xserver.desktopManager.mate.enable = true;"
+      ],
+      "packages": []
+    },
+    {
+      "id": "budgie",
+      "name": "Budgie",
+      "kind": "de",
+      "session": "budgie-desktop",
+      "brand": "#4b5162",
+      "glyph": "desktop",
+      "desc": "Clean GTK desktop from the Solus project. Simple, tidy and quick.",
+      "home": "https://buddiesofbudgie.org/",
+      "docs": "https://wiki.nixos.org/wiki/Budgie",
+      "wayland": false,
+      "x11": true,
+      "needsXserver": true,
+      "dm": "lightdm",
+      "ram": "medium",
+      "nix": [
+        "services.desktopManager.budgie.enable = true;"
+      ],
+      "packages": [],
+      "nixByChannel": {
+        "25.11": [
+          "services.xserver.desktopManager.budgie.enable = true;"
+        ]
+      }
+    },
+    {
+      "id": "pantheon",
+      "name": "Pantheon",
+      "kind": "de",
+      "session": "pantheon",
+      "brand": "#64baff",
+      "glyph": "desktop",
+      "desc": "The elementary OS desktop. Opinionated, macOS-adjacent, very consistent.",
+      "home": "https://elementary.io/",
+      "docs": "https://wiki.nixos.org/wiki/Pantheon",
+      "wayland": false,
+      "x11": true,
+      "needsXserver": true,
+      "dm": "lightdm-pantheon",
+      "ram": "medium",
+      "nix": [
+        "services.desktopManager.pantheon.enable = true;"
+      ],
+      "packages": []
+    },
+    {
+      "id": "lxqt",
+      "name": "LXQt",
+      "kind": "de",
+      "session": "lxqt",
+      "brand": "#0192d3",
+      "glyph": "desktop",
+      "desc": "The lightest full Qt desktop. Tiny memory footprint, still a complete environment.",
+      "home": "https://lxqt-project.org/",
+      "docs": "https://wiki.nixos.org/wiki/LXQt",
+      "wayland": false,
+      "x11": true,
+      "needsXserver": true,
+      "dm": "sddm",
+      "ram": "low",
+      "nix": [
+        "services.xserver.desktopManager.lxqt.enable = true;"
+      ],
+      "packages": []
+    },
+    {
+      "id": "hyprland",
+      "name": "Hyprland",
+      "kind": "wm",
+      "session": "hyprland",
+      "brand": "#00aaae",
+      "glyph": "tiling",
+      "desc": "Dynamic tiling Wayland compositor with animations. The usual pick for a modern rice - you write your own config.",
+      "home": "https://hypr.land/",
+      "docs": "https://wiki.hypr.land/",
+      "wayland": true,
+      "x11": false,
+      "needsXserver": false,
+      "dm": "greetd",
+      "ram": "low",
+      "nix": [
+        "programs.hyprland.enable = true;",
+        "programs.hyprland.xwayland.enable = true;"
+      ],
+      "portal": "xdg-desktop-portal-hyprland",
+      "packages": [
+        "waybar",
+        "wofi",
+        "kitty",
+        "dunst",
+        "hyprpaper",
+        "hyprlock",
+        "grim",
+        "slurp",
+        "wl-clipboard"
+      ],
+      "note": "Hyprland ships no default config. Copy the example to ~/.config/hypr/hyprland.conf on first boot."
+    },
+    {
+      "id": "sway",
+      "name": "Sway",
+      "kind": "wm",
+      "session": "sway",
+      "brand": "#68751d",
+      "glyph": "tiling",
+      "desc": "i3-compatible Wayland compositor. Stable, boring in the best way, keyboard driven.",
+      "home": "https://swaywm.org/",
+      "docs": "https://wiki.nixos.org/wiki/Sway",
+      "wayland": true,
+      "x11": false,
+      "needsXserver": false,
+      "dm": "greetd",
+      "ram": "low",
+      "nix": [
+        "programs.sway.enable = true;",
+        "programs.sway.wrapperFeatures.gtk = true;"
+      ],
+      "portal": "xdg-desktop-portal-wlr",
+      "packages": [
+        "waybar",
+        "wofi",
+        "foot",
+        "mako",
+        "grim",
+        "slurp",
+        "wl-clipboard"
+      ]
+    },
+    {
+      "id": "niri",
+      "name": "Niri",
+      "kind": "wm",
+      "session": "niri",
+      "brand": "#7b61ff",
+      "glyph": "tiling",
+      "desc": "Scrollable-tiling Wayland compositor - windows sit on an infinite horizontal strip.",
+      "home": "https://github.com/YaLTeR/niri",
+      "docs": "https://github.com/YaLTeR/niri/wiki",
+      "wayland": true,
+      "x11": false,
+      "needsXserver": false,
+      "dm": "greetd",
+      "ram": "low",
+      "nix": [
+        "programs.niri.enable = true;"
+      ],
+      "packages": [
+        "waybar",
+        "fuzzel",
+        "alacritty",
+        "mako",
+        "swaylock",
+        "wl-clipboard"
+      ]
+    },
+    {
+      "id": "river",
+      "name": "River",
+      "kind": "wm",
+      "session": "river",
+      "brand": "#4a90d9",
+      "glyph": "tiling",
+      "desc": "Dynamic Wayland compositor configured by a shell script. Minimal and scriptable.",
+      "home": "https://codeberg.org/river/river",
+      "docs": "https://codeberg.org/river/river/wiki",
+      "wayland": true,
+      "x11": false,
+      "needsXserver": false,
+      "dm": "greetd",
+      "ram": "low",
+      "nix": [
+        "programs.river-classic.enable = true;"
+      ],
+      "packages": [
+        "waybar",
+        "fuzzel",
+        "foot",
+        "wl-clipboard"
+      ]
+    },
+    {
+      "id": "i3",
+      "name": "i3",
+      "kind": "wm",
+      "session": "none+i3",
+      "brand": "#e8e8e8",
+      "glyph": "tiling",
+      "desc": "The classic X11 manual tiling window manager. Enormous amount of documentation and examples.",
+      "home": "https://i3wm.org/",
+      "docs": "https://i3wm.org/docs/userguide.html",
+      "wayland": false,
+      "x11": true,
+      "needsXserver": true,
+      "dm": "lightdm",
+      "ram": "low",
+      "nix": [
+        "services.xserver.windowManager.i3.enable = true;"
+      ],
+      "packages": [
+        "dmenu",
+        "i3status",
+        "i3lock",
+        "alacritty",
+        "feh",
+        "picom"
+      ]
+    },
+    {
+      "id": "awesome",
+      "name": "AwesomeWM",
+      "kind": "wm",
+      "session": "none+awesome",
+      "brand": "#535d6c",
+      "glyph": "tiling",
+      "desc": "Highly programmable X11 window manager configured entirely in Lua.",
+      "home": "https://awesomewm.org/",
+      "docs": "https://awesomewm.org/doc/api/",
+      "wayland": false,
+      "x11": true,
+      "needsXserver": true,
+      "dm": "lightdm",
+      "ram": "low",
+      "nix": [
+        "services.xserver.windowManager.awesome.enable = true;"
+      ],
+      "packages": [
+        "alacritty",
+        "feh",
+        "picom",
+        "rofi"
+      ]
+    },
+    {
+      "id": "bspwm",
+      "name": "bspwm",
+      "kind": "wm",
+      "session": "none+bspwm",
+      "brand": "#2f2f2f",
+      "glyph": "tiling",
+      "desc": "Binary space partitioning window manager driven by an external hotkey daemon.",
+      "home": "https://github.com/baskerville/bspwm",
+      "docs": "https://github.com/baskerville/bspwm/blob/master/doc/bspwm.1.asciidoc",
+      "wayland": false,
+      "x11": true,
+      "needsXserver": true,
+      "dm": "lightdm",
+      "ram": "low",
+      "nix": [
+        "services.xserver.windowManager.bspwm.enable = true;"
+      ],
+      "packages": [
+        "sxhkd",
+        "polybar",
+        "rofi",
+        "alacritty",
+        "feh",
+        "picom"
+      ]
+    },
+    {
+      "id": "xmonad",
+      "name": "xmonad",
+      "kind": "wm",
+      "session": "none+xmonad",
+      "brand": "#fd4b2d",
+      "glyph": "tiling",
+      "desc": "Tiling window manager configured in Haskell. Rock solid, endlessly extensible.",
+      "home": "https://xmonad.org/",
+      "docs": "https://xmonad.org/documentation.html",
+      "wayland": false,
+      "x11": true,
+      "needsXserver": true,
+      "dm": "lightdm",
+      "ram": "low",
+      "nix": [
+        "services.xserver.windowManager.xmonad = {",
+        "  enable = true;",
+        "  enableContribAndExtras = true;",
+        "};"
+      ],
+      "packages": [
+        "xmobar",
+        "dmenu",
+        "alacritty",
+        "feh"
+      ]
+    }
+  ],
+  "displayManagers": [
+    {
+      "id": "auto",
+      "name": "Match the desktop",
+      "desc": "Use whatever the selected desktop normally ships with."
+    },
+    {
+      "id": "gdm",
+      "name": "GDM",
+      "desc": "GNOME's login screen. Best Wayland support."
+    },
+    {
+      "id": "sddm",
+      "name": "SDDM",
+      "desc": "Qt login screen used by KDE and LXQt."
+    },
+    {
+      "id": "lightdm",
+      "name": "LightDM",
+      "desc": "Lightweight X11 login screen."
+    },
+    {
+      "id": "greetd",
+      "name": "greetd + tuigreet",
+      "desc": "Minimal text login. Ideal for Wayland tiling setups."
+    },
+    {
+      "id": "none",
+      "name": "No display manager",
+      "desc": "Log in on a TTY and start the session yourself."
+    }
+  ]
+}

@@ -1,0 +1,329 @@
+{
+  "$comment": "Hardware profiles. Emitted verbatim; 'unfree' forces nixpkgs.config.allowUnfree.",
+  "firmware": [
+    {
+      "id": "uefi",
+      "name": "UEFI",
+      "desc": "Anything from roughly 2012 onwards. Uses systemd-boot.",
+      "nix": [
+        "boot.loader.systemd-boot.enable = true;",
+        "boot.loader.efi.canTouchEfiVariables = true;",
+        "boot.loader.systemd-boot.configurationLimit = 10;"
+      ]
+    },
+    {
+      "id": "bios",
+      "name": "Legacy BIOS",
+      "desc": "Older machines with MBR partitioning. Uses GRUB.",
+      "nix": [
+        "boot.loader.grub = {",
+        "  enable = true;",
+        "  device = \"/dev/sda\";",
+        "  configurationLimit = 10;",
+        "};"
+      ],
+      "note": "Point boot.loader.grub.device at the disk you actually installed to - check with lsblk."
+    },
+    {
+      "id": "uefi-grub",
+      "name": "UEFI + GRUB",
+      "desc": "UEFI machines that need GRUB, e.g. for dual booting Windows.",
+      "nix": [
+        "boot.loader.grub = {",
+        "  enable = true;",
+        "  device = \"nodev\";",
+        "  efiSupport = true;",
+        "  useOSProber = true;",
+        "};",
+        "boot.loader.efi.canTouchEfiVariables = true;"
+      ]
+    }
+  ],
+  "gpu": [
+    {
+      "id": "none",
+      "name": "None / headless",
+      "brand": "#6b7280",
+      "glyph": "server",
+      "desc": "No graphics driver at all.",
+      "nix": []
+    },
+    {
+      "id": "intel",
+      "name": "Intel",
+      "brand": "#0071c5",
+      "glyph": "cpu",
+      "desc": "Integrated Intel graphics, with hardware video decoding.",
+      "docs": "https://wiki.nixos.org/wiki/Intel_Graphics",
+      "nix": [
+        "hardware.graphics = {",
+        "  enable = true;",
+        "  enable32Bit = true;",
+        "  extraPackages = with pkgs; [",
+        "    intel-media-driver",
+        "    libvdpau-va-gl",
+        "  ];",
+        "};"
+      ]
+    },
+    {
+      "id": "amd",
+      "name": "AMD",
+      "brand": "#ed1c24",
+      "glyph": "cpu",
+      "desc": "Radeon graphics on the open amdgpu driver. Nothing proprietary needed.",
+      "docs": "https://wiki.nixos.org/wiki/AMD_GPU",
+      "nix": [
+        "hardware.graphics = {",
+        "  enable = true;",
+        "  enable32Bit = true;",
+        "};"
+      ],
+      "videoDrivers": [
+        "amdgpu"
+      ],
+      "note": "The open amdgpu driver needs no extra configuration. Add pkgs.amdvlk to hardware.graphics.extraPackages only if a specific game needs the alternative Vulkan driver."
+    },
+    {
+      "id": "nvidia",
+      "name": "NVIDIA (proprietary)",
+      "brand": "#76b900",
+      "glyph": "cpu",
+      "unfree": true,
+      "desc": "The proprietary NVIDIA driver. Required for CUDA and best for gaming.",
+      "docs": "https://wiki.nixos.org/wiki/NVIDIA",
+      "nix": [
+        "hardware.graphics = {",
+        "  enable = true;",
+        "  enable32Bit = true;",
+        "};",
+        "hardware.nvidia = {",
+        "  modesetting.enable = true;",
+        "  powerManagement.enable = false;",
+        "  powerManagement.finegrained = false;",
+        "  open = false;",
+        "  nvidiaSettings = true;",
+        "  package = config.boot.kernelPackages.nvidiaPackages.stable;",
+        "};"
+      ],
+      "videoDrivers": [
+        "nvidia"
+      ],
+      "conflicts": [
+        "hardened-kernel"
+      ],
+      "note": "Set hardware.nvidia.open = true on RTX 20-series and newer to use the open kernel modules."
+    },
+    {
+      "id": "nvidia-hybrid",
+      "name": "NVIDIA Optimus (laptop)",
+      "brand": "#76b900",
+      "glyph": "cpu",
+      "unfree": true,
+      "desc": "Laptop with Intel or AMD integrated graphics plus a discrete NVIDIA chip.",
+      "docs": "https://wiki.nixos.org/wiki/NVIDIA",
+      "nix": [
+        "hardware.graphics = {",
+        "  enable = true;",
+        "  enable32Bit = true;",
+        "};",
+        "hardware.nvidia = {",
+        "  modesetting.enable = true;",
+        "  powerManagement.enable = true;",
+        "  open = false;",
+        "  nvidiaSettings = true;",
+        "  package = config.boot.kernelPackages.nvidiaPackages.stable;",
+        "  prime = {",
+        "    offload = {",
+        "      enable = true;",
+        "      enableOffloadCmd = true;",
+        "    };",
+        "    # Find these with: lspci | grep -E 'VGA|3D'",
+        "    intelBusId = \"PCI:0:2:0\";",
+        "    nvidiaBusId = \"PCI:1:0:0\";",
+        "  };",
+        "};"
+      ],
+      "videoDrivers": [
+        "nvidia"
+      ],
+      "conflicts": [
+        "hardened-kernel"
+      ],
+      "note": "The bus IDs are placeholders. Run `lspci | grep -E 'VGA|3D'` and convert e.g. 01:00.0 to PCI:1:0:0, or the display server will fail to start.",
+      "manual": true
+    },
+    {
+      "id": "vm",
+      "name": "Virtual machine",
+      "brand": "#8b5cf6",
+      "glyph": "box",
+      "desc": "Guest drivers for QEMU/KVM, VirtualBox or VMware.",
+      "docs": "https://wiki.nixos.org/wiki/Virt-manager",
+      "nix": [
+        "hardware.graphics.enable = true;",
+        "services.qemuGuest.enable = true;",
+        "services.spice-vdagentd.enable = true;"
+      ]
+    }
+  ],
+  "cpu": [
+    {
+      "id": "intel",
+      "name": "Intel",
+      "brand": "#0071c5",
+      "nix": [
+        "hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;"
+      ]
+    },
+    {
+      "id": "amd",
+      "name": "AMD",
+      "brand": "#ed1c24",
+      "nix": [
+        "hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;"
+      ]
+    },
+    {
+      "id": "other",
+      "name": "Other / ARM",
+      "brand": "#6b7280",
+      "nix": []
+    }
+  ],
+  "filesystem": [
+    {
+      "id": "ext4",
+      "name": "ext4",
+      "desc": "The boring, reliable default.",
+      "nix": []
+    },
+    {
+      "id": "btrfs",
+      "name": "Btrfs",
+      "desc": "Snapshots, compression and checksums.",
+      "docs": "https://wiki.nixos.org/wiki/Btrfs",
+      "nix": [
+        "services.btrfs.autoScrub = {",
+        "  enable = true;",
+        "  interval = \"monthly\";",
+        "};"
+      ]
+    },
+    {
+      "id": "zfs",
+      "name": "ZFS",
+      "desc": "The most robust option, at the cost of RAM and kernel coupling.",
+      "docs": "https://wiki.nixos.org/wiki/ZFS",
+      "nix": [
+        "boot.supportedFilesystems = [ \"zfs\" ];",
+        "boot.zfs.forceImportRoot = false;",
+        "networking.hostId = \"@HOSTID@\";",
+        "services.zfs.autoScrub.enable = true;",
+        "services.zfs.trim.enable = true;"
+      ],
+      "conflicts": [
+        "hardened-kernel"
+      ],
+      "note": "ZFS lags behind the newest kernels. If a rebuild fails, pin boot.kernelPackages to the latest version ZFS supports."
+    }
+  ],
+  "swap": [
+    {
+      "id": "none",
+      "name": "None",
+      "desc": "Whatever your partition layout already provides.",
+      "nix": []
+    },
+    {
+      "id": "zram",
+      "name": "zram",
+      "desc": "Compressed swap in RAM. Best default for most machines.",
+      "nix": [
+        "zramSwap = {",
+        "  enable = true;",
+        "  memoryPercent = 50;",
+        "};"
+      ]
+    },
+    {
+      "id": "file",
+      "name": "Swap file",
+      "desc": "An 8 GB file on the root filesystem.",
+      "nix": [
+        "swapDevices = [{",
+        "  device = \"/var/lib/swapfile\";",
+        "  size = 8 * 1024;",
+        "}];"
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "id": "desktop",
+      "name": "Desktop",
+      "glyph": "desktop",
+      "desc": "A machine you sit in front of. Graphics, audio and printing on.",
+      "nix": []
+    },
+    {
+      "id": "laptop",
+      "name": "Laptop",
+      "glyph": "cpu",
+      "desc": "Adds power management, thermal control and lid handling.",
+      "nix": [
+        "services.thermald.enable = true;",
+        "services.power-profiles-daemon.enable = true;",
+        "powerManagement.enable = true;",
+        "services.logind.settings.Login.HandleLidSwitch = \"suspend\";",
+        "hardware.bluetooth = {",
+        "  enable = true;",
+        "  powerOnBoot = false;",
+        "};"
+      ]
+    },
+    {
+      "id": "server",
+      "name": "Server",
+      "glyph": "server",
+      "desc": "Headless, never sleeps, journal kept small.",
+      "nix": [
+        "services.logind.settings.Login.HandleLidSwitch = \"ignore\";",
+        "powerManagement.cpuFreqGovernor = \"performance\";",
+        "services.journald.extraConfig = \"SystemMaxUse=500M\";",
+        "documentation.enable = false;",
+        "documentation.nixos.enable = false;"
+      ]
+    },
+    {
+      "id": "htpc",
+      "name": "Media box / HTPC",
+      "glyph": "tv",
+      "desc": "Wakes for the remote, never sleeps mid-film.",
+      "nix": [
+        "services.logind.settings.Login.HandleLidSwitch = \"ignore\";",
+        "powerManagement.cpuFreqGovernor = \"ondemand\";",
+        "hardware.bluetooth.enable = true;"
+      ]
+    },
+    {
+      "id": "vm",
+      "name": "Virtual machine",
+      "glyph": "box",
+      "desc": "Guest agents, no firmware blobs, minimal footprint.",
+      "nix": [
+        "services.qemuGuest.enable = true;"
+      ]
+    },
+    {
+      "id": "minimal",
+      "name": "Minimal",
+      "glyph": "package",
+      "desc": "As little as possible. Good starting point for containers and appliances.",
+      "nix": [
+        "documentation.enable = false;",
+        "documentation.nixos.enable = false;"
+      ]
+    }
+  ]
+}

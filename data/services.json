@@ -1,0 +1,1919 @@
+{
+  "$comment": "Self-hosted services. 'nix' is emitted verbatim. 'ports' feed the central firewall. 'secrets' are files you must create by hand before the first rebuild - the review screen lists them. Every option path here is checked against the live NixOS options index by tools/verify-options.mjs.",
+  "categories": [
+    {
+      "id": "media",
+      "name": "Media & streaming",
+      "glyph": "tv"
+    },
+    {
+      "id": "arr",
+      "name": "Media automation",
+      "glyph": "download"
+    },
+    {
+      "id": "files",
+      "name": "Files & sync",
+      "glyph": "folder"
+    },
+    {
+      "id": "network",
+      "name": "Network & DNS",
+      "glyph": "network"
+    },
+    {
+      "id": "web",
+      "name": "Web servers & proxies",
+      "glyph": "cloud"
+    },
+    {
+      "id": "dev",
+      "name": "Dev & git",
+      "glyph": "code"
+    },
+    {
+      "id": "monitor",
+      "name": "Monitoring",
+      "glyph": "chart"
+    },
+    {
+      "id": "home",
+      "name": "Home automation",
+      "glyph": "home"
+    },
+    {
+      "id": "productivity",
+      "name": "Productivity",
+      "glyph": "doc"
+    },
+    {
+      "id": "security",
+      "name": "Security & identity",
+      "glyph": "shield"
+    },
+    {
+      "id": "ai",
+      "name": "AI & local models",
+      "glyph": "robot"
+    },
+    {
+      "id": "db",
+      "name": "Databases",
+      "glyph": "database"
+    },
+    {
+      "id": "infra",
+      "name": "System services",
+      "glyph": "cog"
+    }
+  ],
+  "items": [
+    {
+      "id": "jellyfin",
+      "name": "Jellyfin",
+      "cat": "media",
+      "glyph": "tv",
+      "brand": "#00a4dc",
+      "desc": "Media server for films, TV and music. No account, no subscription, no telemetry.",
+      "home": "https://jellyfin.org/",
+      "docs": "https://jellyfin.org/docs/",
+      "opt": "services.jellyfin",
+      "web": true,
+      "webPort": 8096,
+      "ports": {
+        "tcp": [
+          8096
+        ],
+        "udp": [
+          1900,
+          7359
+        ]
+      },
+      "nix": [
+        "services.jellyfin = {",
+        "  enable = true;",
+        "  openFirewall = false;",
+        "};"
+      ],
+      "note": "Add your libraries through the setup wizard on first launch. The UDP ports are for DLNA and client auto-discovery."
+    },
+    {
+      "id": "plex",
+      "name": "Plex",
+      "cat": "media",
+      "glyph": "tv",
+      "brand": "#e5a00d",
+      "unfree": true,
+      "desc": "Polished media server with first-class apps on every TV platform.",
+      "home": "https://www.plex.tv/",
+      "docs": "https://support.plex.tv/",
+      "opt": "services.plex",
+      "web": true,
+      "webPort": 32400,
+      "ports": {
+        "tcp": [
+          32400
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.plex = {",
+        "  enable = true;",
+        "  openFirewall = true;",
+        "};"
+      ]
+    },
+    {
+      "id": "navidrome",
+      "name": "Navidrome",
+      "cat": "media",
+      "glyph": "music",
+      "brand": "#4a90d9",
+      "desc": "Subsonic-compatible music streaming server for your own library.",
+      "home": "https://www.navidrome.org/",
+      "docs": "https://www.navidrome.org/docs/",
+      "opt": "services.navidrome",
+      "web": true,
+      "webPort": 4533,
+      "ports": {
+        "tcp": [
+          4533
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.navidrome = {",
+        "  enable = true;",
+        "  settings = {",
+        "    Address = \"0.0.0.0\";",
+        "    Port = 4533;",
+        "    MusicFolder = \"/srv/media/music\";",
+        "  };",
+        "};"
+      ]
+    },
+    {
+      "id": "audiobookshelf",
+      "name": "Audiobookshelf",
+      "cat": "media",
+      "glyph": "book",
+      "brand": "#82612c",
+      "desc": "Audiobook and podcast server that remembers where you stopped on every device.",
+      "home": "https://www.audiobookshelf.org/",
+      "docs": "https://www.audiobookshelf.org/docs",
+      "opt": "services.audiobookshelf",
+      "web": true,
+      "webPort": 8000,
+      "ports": {
+        "tcp": [
+          8000
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.audiobookshelf = {",
+        "  enable = true;",
+        "  host = \"0.0.0.0\";",
+        "  port = 8000;",
+        "};"
+      ]
+    },
+    {
+      "id": "immich",
+      "name": "Immich",
+      "cat": "media",
+      "glyph": "camera",
+      "brand": "#4250af",
+      "desc": "Self-hosted photo and video backup with mobile apps, face grouping and search.",
+      "home": "https://immich.app/",
+      "docs": "https://immich.app/docs/overview/introduction",
+      "opt": "services.immich",
+      "web": true,
+      "webPort": 2283,
+      "ports": {
+        "tcp": [
+          2283
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.immich = {",
+        "  enable = true;",
+        "  host = \"0.0.0.0\";",
+        "  port = 2283;",
+        "  mediaLocation = \"/srv/media/immich\";",
+        "};"
+      ],
+      "note": "Immich pulls in PostgreSQL with pgvecto-rs and Redis automatically. It wants a lot of RAM during machine-learning jobs."
+    },
+    {
+      "id": "komga",
+      "name": "Komga",
+      "cat": "media",
+      "glyph": "book",
+      "brand": "#3f51b5",
+      "desc": "Comic and manga server that speaks OPDS to any reader app.",
+      "home": "https://komga.org/",
+      "docs": "https://komga.org/docs/introduction",
+      "opt": "services.komga",
+      "web": true,
+      "webPort": 25600,
+      "ports": {
+        "tcp": [
+          25600
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.komga = {",
+        "  enable = true;",
+        "  settings.server.port = 25600;",
+        "};"
+      ]
+    },
+    {
+      "id": "calibre-web",
+      "name": "Calibre-Web",
+      "cat": "media",
+      "glyph": "book",
+      "brand": "#45b29d",
+      "desc": "Browser front end for a Calibre ebook library, with send-to-Kindle.",
+      "home": "https://github.com/janeczku/calibre-web",
+      "docs": "https://github.com/janeczku/calibre-web/wiki",
+      "opt": "services.calibre-web",
+      "web": true,
+      "webPort": 8083,
+      "ports": {
+        "tcp": [
+          8083
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.calibre-web = {",
+        "  enable = true;",
+        "  listen = { ip = \"0.0.0.0\"; port = 8083; };",
+        "  options.calibreLibrary = \"/srv/media/books\";",
+        "};"
+      ],
+      "note": "The directory must already contain a Calibre metadata.db, or the first start fails."
+    },
+    {
+      "id": "sonarr",
+      "name": "Sonarr",
+      "cat": "arr",
+      "glyph": "tv",
+      "brand": "#35c5f4",
+      "desc": "Watches for new episodes of the shows you follow and fetches them.",
+      "home": "https://sonarr.tv/",
+      "docs": "https://wiki.servarr.com/sonarr",
+      "opt": "services.sonarr",
+      "web": true,
+      "webPort": 8989,
+      "ports": {
+        "tcp": [
+          8989
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.sonarr = {",
+        "  enable = true;",
+        "  group = \"media\";",
+        "};"
+      ],
+      "needsGroup": "media"
+    },
+    {
+      "id": "radarr",
+      "name": "Radarr",
+      "cat": "arr",
+      "glyph": "media",
+      "brand": "#ffc230",
+      "desc": "The same idea as Sonarr, for films.",
+      "home": "https://radarr.video/",
+      "docs": "https://wiki.servarr.com/radarr",
+      "opt": "services.radarr",
+      "web": true,
+      "webPort": 7878,
+      "ports": {
+        "tcp": [
+          7878
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.radarr = {",
+        "  enable = true;",
+        "  group = \"media\";",
+        "};"
+      ],
+      "needsGroup": "media"
+    },
+    {
+      "id": "lidarr",
+      "name": "Lidarr",
+      "cat": "arr",
+      "glyph": "music",
+      "brand": "#159552",
+      "desc": "Music collection manager for the *arr stack.",
+      "home": "https://lidarr.audio/",
+      "docs": "https://wiki.servarr.com/lidarr",
+      "opt": "services.lidarr",
+      "web": true,
+      "webPort": 8686,
+      "ports": {
+        "tcp": [
+          8686
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.lidarr = {",
+        "  enable = true;",
+        "  group = \"media\";",
+        "};"
+      ],
+      "needsGroup": "media"
+    },
+    {
+      "id": "prowlarr",
+      "name": "Prowlarr",
+      "cat": "arr",
+      "glyph": "search",
+      "brand": "#e66000",
+      "desc": "Single place to manage indexers, syncs them to every other *arr app.",
+      "home": "https://prowlarr.com/",
+      "docs": "https://wiki.servarr.com/prowlarr",
+      "opt": "services.prowlarr",
+      "web": true,
+      "webPort": 9696,
+      "ports": {
+        "tcp": [
+          9696
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.prowlarr.enable = true;"
+      ]
+    },
+    {
+      "id": "bazarr",
+      "name": "Bazarr",
+      "cat": "arr",
+      "glyph": "doc",
+      "brand": "#be4b3b",
+      "desc": "Finds and downloads subtitles for everything in your library.",
+      "home": "https://www.bazarr.media/",
+      "docs": "https://wiki.bazarr.media/",
+      "opt": "services.bazarr",
+      "web": true,
+      "webPort": 6767,
+      "ports": {
+        "tcp": [
+          6767
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.bazarr = {",
+        "  enable = true;",
+        "  group = \"media\";",
+        "};"
+      ],
+      "needsGroup": "media"
+    },
+    {
+      "id": "transmission",
+      "name": "Transmission",
+      "cat": "arr",
+      "glyph": "download",
+      "brand": "#d70008",
+      "desc": "Lightweight BitTorrent daemon with a web interface.",
+      "home": "https://transmissionbt.com/",
+      "docs": "https://github.com/transmission/transmission/tree/main/docs",
+      "opt": "services.transmission",
+      "web": true,
+      "webPort": 9091,
+      "ports": {
+        "tcp": [
+          9091,
+          51413
+        ],
+        "udp": [
+          51413
+        ]
+      },
+      "nix": [
+        "services.transmission = {",
+        "  enable = true;",
+        "  group = \"media\";",
+        "  settings = {",
+        "    rpc-bind-address = \"0.0.0.0\";",
+        "    rpc-whitelist-enabled = false;",
+        "    rpc-host-whitelist-enabled = false;",
+        "    download-dir = \"/srv/media/downloads\";",
+        "    incomplete-dir = \"/srv/media/downloads/.incomplete\";",
+        "  };",
+        "};"
+      ],
+      "needsGroup": "media",
+      "note": "The RPC whitelist is disabled so you can reach the UI from the LAN. Put it behind the reverse proxy with authentication if the box is exposed."
+    },
+    {
+      "id": "sabnzbd",
+      "name": "SABnzbd",
+      "cat": "arr",
+      "glyph": "download",
+      "brand": "#ffd54f",
+      "desc": "Usenet binary downloader with a web interface.",
+      "home": "https://sabnzbd.org/",
+      "docs": "https://sabnzbd.org/wiki/",
+      "opt": "services.sabnzbd",
+      "web": true,
+      "webPort": 8080,
+      "ports": {
+        "tcp": [
+          8080
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.sabnzbd = {",
+        "  enable = true;",
+        "  group = \"media\";",
+        "};"
+      ],
+      "needsGroup": "media"
+    },
+    {
+      "id": "nextcloud",
+      "name": "Nextcloud",
+      "cat": "files",
+      "glyph": "cloud",
+      "brand": "#0082c9",
+      "desc": "Files, calendar, contacts and a large app ecosystem. The full private-cloud option.",
+      "home": "https://nextcloud.com/",
+      "docs": "https://docs.nextcloud.com/",
+      "opt": "services.nextcloud",
+      "web": true,
+      "webPort": 80,
+      "ownsHttp": true,
+      "ports": {
+        "tcp": [
+          80,
+          443
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.nextcloud = {",
+        "  enable = true;",
+        "  package = pkgs.nextcloud31;",
+        "  hostName = \"@DOMAIN@\";",
+        "  https = true;",
+        "  database.createLocally = true;",
+        "  configureRedis = true;",
+        "  maxUploadSize = \"4G\";",
+        "  config = {",
+        "    dbtype = \"pgsql\";",
+        "    adminuser = \"admin\";",
+        "    adminpassFile = \"/var/lib/nextcloud-admin-pass\";",
+        "  };",
+        "  settings.trusted_domains = [ \"@DOMAIN@\" ];",
+        "};"
+      ],
+      "secrets": [
+        {
+          "path": "/var/lib/nextcloud-admin-pass",
+          "desc": "Initial admin password for Nextcloud",
+          "cmd": "install -m600 <(head -c24 /dev/urandom | base64) /var/lib/nextcloud-admin-pass"
+        }
+      ],
+      "note": "Pin services.nextcloud.package to the newest version in your channel - Nextcloud only supports upgrading one major release at a time.",
+      "provides": [
+        "nginx"
+      ]
+    },
+    {
+      "id": "syncthing",
+      "name": "Syncthing",
+      "cat": "files",
+      "glyph": "folder",
+      "brand": "#0891d1",
+      "desc": "Continuous peer-to-peer file sync between your own devices. No server in the middle.",
+      "home": "https://syncthing.net/",
+      "docs": "https://docs.syncthing.net/",
+      "opt": "services.syncthing",
+      "web": true,
+      "webPort": 8384,
+      "ports": {
+        "tcp": [
+          8384,
+          22000
+        ],
+        "udp": [
+          22000,
+          21027
+        ]
+      },
+      "nix": [
+        "services.syncthing = {",
+        "  enable = true;",
+        "  openDefaultPorts = true;",
+        "  guiAddress = \"0.0.0.0:8384\";",
+        "  user = \"@USER@\";",
+        "  dataDir = \"/home/@USER@/Sync\";",
+        "  configDir = \"/home/@USER@/.config/syncthing\";",
+        "};"
+      ],
+      "note": "The GUI has no password by default. Set one immediately, or bind it to 127.0.0.1 and reach it over SSH."
+    },
+    {
+      "id": "samba",
+      "name": "Samba",
+      "cat": "files",
+      "glyph": "folder",
+      "brand": "#f5a623",
+      "desc": "SMB/CIFS shares that Windows, macOS and phones can all mount.",
+      "home": "https://www.samba.org/",
+      "docs": "https://wiki.nixos.org/wiki/Samba",
+      "opt": "services.samba",
+      "ports": {
+        "tcp": [
+          139,
+          445
+        ],
+        "udp": [
+          137,
+          138
+        ]
+      },
+      "nix": [
+        "services.samba = {",
+        "  enable = true;",
+        "  openFirewall = true;",
+        "  settings = {",
+        "    global = {",
+        "      \"workgroup\" = \"WORKGROUP\";",
+        "      \"server string\" = \"@HOSTNAME@\";",
+        "      \"security\" = \"user\";",
+        "      \"map to guest\" = \"never\";",
+        "    };",
+        "    share = {",
+        "      \"path\" = \"/srv/share\";",
+        "      \"browseable\" = \"yes\";",
+        "      \"read only\" = \"no\";",
+        "      \"guest ok\" = \"no\";",
+        "      \"create mask\" = \"0644\";",
+        "      \"directory mask\" = \"0755\";",
+        "    };",
+        "  };",
+        "};",
+        "services.samba-wsdd = {",
+        "  enable = true;",
+        "  openFirewall = true;",
+        "};"
+      ],
+      "note": "Create the Samba password separately with `smbpasswd -a <user>` - Linux and Samba passwords are stored independently."
+    },
+    {
+      "id": "paperless",
+      "name": "Paperless-ngx",
+      "cat": "files",
+      "glyph": "doc",
+      "brand": "#17541f",
+      "desc": "Scans, OCRs and indexes your paper documents so you can search them.",
+      "home": "https://docs.paperless-ngx.com/",
+      "docs": "https://docs.paperless-ngx.com/",
+      "opt": "services.paperless",
+      "web": true,
+      "webPort": 28981,
+      "ports": {
+        "tcp": [
+          28981
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.paperless = {",
+        "  enable = true;",
+        "  address = \"0.0.0.0\";",
+        "  port = 28981;",
+        "  passwordFile = \"/var/lib/paperless/admin-pass\";",
+        "  settings = {",
+        "    PAPERLESS_OCR_LANGUAGE = \"eng\";",
+        "    PAPERLESS_TIME_ZONE = \"@TIMEZONE@\";",
+        "  };",
+        "};"
+      ],
+      "secrets": [
+        {
+          "path": "/var/lib/paperless/admin-pass",
+          "desc": "Paperless admin password",
+          "cmd": "mkdir -p /var/lib/paperless && head -c18 /dev/urandom | base64 > /var/lib/paperless/admin-pass && chmod 600 /var/lib/paperless/admin-pass"
+        }
+      ]
+    },
+    {
+      "id": "nfs",
+      "name": "NFS server",
+      "cat": "files",
+      "glyph": "folder",
+      "brand": "#607d8b",
+      "desc": "Unix-native network filesystem. Faster than SMB between Linux machines.",
+      "home": "https://linux-nfs.org/",
+      "docs": "https://wiki.nixos.org/wiki/NFS",
+      "opt": "services.nfs.server",
+      "ports": {
+        "tcp": [
+          111,
+          2049
+        ],
+        "udp": [
+          111,
+          2049
+        ]
+      },
+      "nix": [
+        "services.nfs.server = {",
+        "  enable = true;",
+        "  exports = ''",
+        "    /srv/nfs  192.168.0.0/16(rw,sync,no_subtree_check)",
+        "  '';",
+        "};"
+      ]
+    },
+    {
+      "id": "adguardhome",
+      "name": "AdGuard Home",
+      "cat": "network",
+      "glyph": "shield",
+      "brand": "#68bc71",
+      "desc": "Network-wide DNS ad and tracker blocking for every device on the LAN.",
+      "home": "https://adguard.com/adguard-home/overview.html",
+      "docs": "https://github.com/AdguardTeam/AdGuardHome/wiki",
+      "opt": "services.adguardhome",
+      "web": true,
+      "webPort": 3000,
+      "ports": {
+        "tcp": [
+          53,
+          3000
+        ],
+        "udp": [
+          53
+        ]
+      },
+      "nix": [
+        "services.adguardhome = {",
+        "  enable = true;",
+        "  host = \"0.0.0.0\";",
+        "  port = 3000;",
+        "  mutableSettings = true;",
+        "  settings = {",
+        "    dns = {",
+        "      bind_hosts = [ \"0.0.0.0\" ];",
+        "      upstream_dns = [ \"https://dns.quad9.net/dns-query\" \"https://dns.cloudflare.com/dns-query\" ];",
+        "    };",
+        "  };",
+        "};"
+      ],
+      "conflicts": [
+        "dns-over-tls"
+      ],
+      "note": "Point your router's DHCP at this machine's IP for it to take effect network-wide."
+    },
+    {
+      "id": "unbound",
+      "name": "Unbound",
+      "cat": "network",
+      "glyph": "network",
+      "brand": "#2c5aa0",
+      "desc": "Validating, recursive DNS resolver. Answers queries itself instead of trusting an upstream.",
+      "home": "https://nlnetlabs.nl/projects/unbound/",
+      "docs": "https://unbound.docs.nlnetlabs.nl/",
+      "opt": "services.unbound",
+      "ports": {
+        "tcp": [
+          53
+        ],
+        "udp": [
+          53
+        ]
+      },
+      "nix": [
+        "services.unbound = {",
+        "  enable = true;",
+        "  settings.server = {",
+        "    interface = [ \"0.0.0.0\" ];",
+        "    access-control = [ \"192.168.0.0/16 allow\" \"127.0.0.0/8 allow\" ];",
+        "    hide-identity = true;",
+        "    hide-version = true;",
+        "  };",
+        "};"
+      ]
+    },
+    {
+      "id": "headscale",
+      "name": "Headscale",
+      "cat": "network",
+      "glyph": "vpn",
+      "brand": "#1e293b",
+      "desc": "Self-hosted control server for Tailscale clients.",
+      "home": "https://headscale.net/",
+      "docs": "https://headscale.net/stable/",
+      "opt": "services.headscale",
+      "web": true,
+      "webPort": 8085,
+      "ports": {
+        "tcp": [
+          8085
+        ],
+        "udp": [
+          3478
+        ]
+      },
+      "nix": [
+        "services.headscale = {",
+        "  enable = true;",
+        "  address = \"0.0.0.0\";",
+        "  port = 8085;",
+        "  settings.server_url = \"https://@DOMAIN@\";",
+        "};"
+      ]
+    },
+    {
+      "id": "caddy",
+      "name": "Caddy",
+      "cat": "web",
+      "glyph": "cloud",
+      "brand": "#22b638",
+      "desc": "Web server and reverse proxy that gets HTTPS certificates automatically.",
+      "home": "https://caddyserver.com/",
+      "docs": "https://caddyserver.com/docs/",
+      "opt": "services.caddy",
+      "ownsHttp": true,
+      "ports": {
+        "tcp": [
+          80,
+          443
+        ],
+        "udp": [
+          443
+        ]
+      },
+      "nix": [
+        "services.caddy.enable = true;"
+      ],
+      "provides": [
+        "proxy"
+      ],
+      "note": "Ports 80 and 443 must be reachable from the internet for the ACME HTTP challenge to succeed."
+    },
+    {
+      "id": "nginx",
+      "name": "nginx",
+      "cat": "web",
+      "glyph": "cloud",
+      "brand": "#009639",
+      "desc": "The classic high-performance web server and reverse proxy, with ACME wired in.",
+      "home": "https://nginx.org/",
+      "docs": "https://wiki.nixos.org/wiki/Nginx",
+      "opt": "services.nginx",
+      "ownsHttp": true,
+      "ports": {
+        "tcp": [
+          80,
+          443
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.nginx = {",
+        "  enable = true;",
+        "  recommendedProxySettings = true;",
+        "  recommendedTlsSettings = true;",
+        "  recommendedGzipSettings = true;",
+        "  recommendedOptimisation = true;",
+        "};"
+      ],
+      "provides": [
+        "proxy"
+      ]
+    },
+    {
+      "id": "forgejo",
+      "name": "Forgejo",
+      "cat": "dev",
+      "glyph": "code",
+      "brand": "#fb923c",
+      "desc": "Lightweight self-hosted git forge with issues, pull requests and CI.",
+      "home": "https://forgejo.org/",
+      "docs": "https://forgejo.org/docs/latest/",
+      "opt": "services.forgejo",
+      "web": true,
+      "webPort": 3030,
+      "ports": {
+        "tcp": [
+          3030
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.forgejo = {",
+        "  enable = true;",
+        "  database.type = \"postgres\";",
+        "  settings = {",
+        "    server = {",
+        "      DOMAIN = \"@DOMAIN@\";",
+        "      ROOT_URL = \"https://@DOMAIN@/\";",
+        "      HTTP_ADDR = \"0.0.0.0\";",
+        "      HTTP_PORT = 3030;",
+        "    };",
+        "    service.DISABLE_REGISTRATION = true;",
+        "  };",
+        "};"
+      ],
+      "note": "Registration is disabled. Create the first account with `forgejo admin user create` as the forgejo user."
+    },
+    {
+      "id": "gitea",
+      "name": "Gitea",
+      "cat": "dev",
+      "glyph": "code",
+      "brand": "#609926",
+      "desc": "The project Forgejo forked from. Same shape, different governance.",
+      "home": "https://about.gitea.com/",
+      "docs": "https://docs.gitea.com/",
+      "opt": "services.gitea",
+      "web": true,
+      "webPort": 3031,
+      "ports": {
+        "tcp": [
+          3031
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.gitea = {",
+        "  enable = true;",
+        "  database.type = \"postgres\";",
+        "  settings.server = {",
+        "    DOMAIN = \"@DOMAIN@\";",
+        "    ROOT_URL = \"https://@DOMAIN@/\";",
+        "    HTTP_ADDR = \"0.0.0.0\";",
+        "    HTTP_PORT = 3031;",
+        "  };",
+        "};"
+      ],
+      "conflicts": [
+        "forgejo"
+      ]
+    },
+    {
+      "id": "jenkins",
+      "name": "Jenkins",
+      "cat": "dev",
+      "glyph": "cog",
+      "brand": "#d24939",
+      "desc": "Long-standing automation server for builds and scheduled jobs.",
+      "home": "https://www.jenkins.io/",
+      "docs": "https://www.jenkins.io/doc/",
+      "opt": "services.jenkins",
+      "web": true,
+      "webPort": 8073,
+      "ports": {
+        "tcp": [
+          8073
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.jenkins = {",
+        "  enable = true;",
+        "  listenAddress = \"0.0.0.0\";",
+        "  port = 8073;",
+        "};"
+      ]
+    },
+    {
+      "id": "code-server",
+      "name": "code-server",
+      "cat": "dev",
+      "glyph": "editor",
+      "brand": "#2f80ed",
+      "desc": "VS Code in the browser, running on the server.",
+      "home": "https://coder.com/",
+      "docs": "https://coder.com/docs/code-server",
+      "opt": "services.code-server",
+      "web": true,
+      "webPort": 4444,
+      "ports": {
+        "tcp": [
+          4444
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.code-server = {",
+        "  enable = true;",
+        "  host = \"0.0.0.0\";",
+        "  port = 4444;",
+        "  auth = \"password\";",
+        "  hashedPassword = \"@ARGON2_HASH@\";",
+        "};"
+      ],
+      "secrets": [
+        {
+          "path": "hashedPassword in configuration.nix",
+          "desc": "Argon2 hash of your code-server password",
+          "cmd": "nix run nixpkgs#libargon2 -- \"$(head -c16 /dev/urandom | base64)\" -e <<< 'your-password'"
+        }
+      ],
+      "note": "Replace @ARGON2_HASH@ with the output of the command above before rebuilding."
+    },
+    {
+      "id": "prometheus",
+      "name": "Prometheus",
+      "cat": "monitor",
+      "glyph": "chart",
+      "brand": "#e6522c",
+      "desc": "Time-series metrics database that scrapes exporters, with the node exporter enabled.",
+      "home": "https://prometheus.io/",
+      "docs": "https://prometheus.io/docs/",
+      "opt": "services.prometheus",
+      "web": true,
+      "webPort": 9090,
+      "ports": {
+        "tcp": [
+          9090
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.prometheus = {",
+        "  enable = true;",
+        "  port = 9090;",
+        "  exporters.node = {",
+        "    enable = true;",
+        "    enabledCollectors = [ \"systemd\" ];",
+        "    port = 9100;",
+        "  };",
+        "  scrapeConfigs = [{",
+        "    job_name = \"node\";",
+        "    static_configs = [{ targets = [ \"127.0.0.1:9100\" ]; }];",
+        "  }];",
+        "};"
+      ]
+    },
+    {
+      "id": "grafana",
+      "name": "Grafana",
+      "cat": "monitor",
+      "glyph": "chart",
+      "brand": "#f46800",
+      "desc": "Dashboards for Prometheus, Loki and about eighty other data sources.",
+      "home": "https://grafana.com/oss/grafana/",
+      "docs": "https://grafana.com/docs/grafana/latest/",
+      "opt": "services.grafana",
+      "web": true,
+      "webPort": 3010,
+      "ports": {
+        "tcp": [
+          3010
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.grafana = {",
+        "  enable = true;",
+        "  settings.server = {",
+        "    http_addr = \"0.0.0.0\";",
+        "    http_port = 3010;",
+        "    domain = \"@DOMAIN@\";",
+        "  };",
+        "};"
+      ],
+      "note": "First login is admin / admin, and it will make you change it."
+    },
+    {
+      "id": "uptime-kuma",
+      "name": "Uptime Kuma",
+      "cat": "monitor",
+      "glyph": "chart",
+      "brand": "#5cdd8b",
+      "desc": "Pretty uptime monitor with notifications to almost any service.",
+      "home": "https://uptime.kuma.pet/",
+      "docs": "https://github.com/louislam/uptime-kuma/wiki",
+      "opt": "services.uptime-kuma",
+      "web": true,
+      "webPort": 3001,
+      "ports": {
+        "tcp": [
+          3001
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.uptime-kuma = {",
+        "  enable = true;",
+        "  settings = {",
+        "    HOST = \"0.0.0.0\";",
+        "    PORT = \"3001\";",
+        "  };",
+        "};"
+      ]
+    },
+    {
+      "id": "netdata",
+      "name": "Netdata",
+      "cat": "monitor",
+      "glyph": "chart",
+      "brand": "#00ab44",
+      "desc": "Per-second metrics for everything on the box, zero configuration.",
+      "home": "https://www.netdata.cloud/",
+      "docs": "https://learn.netdata.cloud/",
+      "opt": "services.netdata",
+      "web": true,
+      "webPort": 19999,
+      "ports": {
+        "tcp": [
+          19999
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.netdata = {",
+        "  enable = true;",
+        "  config.web.\"default port\" = \"19999\";",
+        "};"
+      ]
+    },
+    {
+      "id": "home-assistant",
+      "name": "Home Assistant",
+      "cat": "home",
+      "glyph": "home",
+      "brand": "#41bdf5",
+      "desc": "The hub for local home automation - talks to thousands of device integrations.",
+      "home": "https://www.home-assistant.io/",
+      "docs": "https://www.home-assistant.io/docs/",
+      "opt": "services.home-assistant",
+      "web": true,
+      "webPort": 8123,
+      "ports": {
+        "tcp": [
+          8123
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.home-assistant = {",
+        "  enable = true;",
+        "  openFirewall = true;",
+        "  extraComponents = [ \"default_config\" \"met\" \"esphome\" \"mqtt\" \"radio_browser\" ];",
+        "  config = {",
+        "    default_config = {};",
+        "    homeassistant = {",
+        "      name = \"Home\";",
+        "      time_zone = \"@TIMEZONE@\";",
+        "      unit_system = \"metric\";",
+        "    };",
+        "    http = {",
+        "      server_host = \"0.0.0.0\";",
+        "      use_x_forwarded_for = true;",
+        "      trusted_proxies = [ \"127.0.0.1\" ];",
+        "    };",
+        "  };",
+        "};"
+      ],
+      "note": "Setting `config` makes configuration.yaml read-only. Use `services.home-assistant.extraComponents` to add integrations that need Python dependencies."
+    },
+    {
+      "id": "mosquitto",
+      "name": "Mosquitto",
+      "cat": "home",
+      "glyph": "network",
+      "brand": "#3c5280",
+      "desc": "MQTT broker - the message bus most smart-home devices speak.",
+      "home": "https://mosquitto.org/",
+      "docs": "https://mosquitto.org/documentation/",
+      "opt": "services.mosquitto",
+      "ports": {
+        "tcp": [
+          1883
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.mosquitto = {",
+        "  enable = true;",
+        "  listeners = [{",
+        "    address = \"0.0.0.0\";",
+        "    port = 1883;",
+        "    users.homeassistant = {",
+        "      acl = [ \"readwrite #\" ];",
+        "      passwordFile = \"/var/lib/mosquitto/ha-password\";",
+        "    };",
+        "  }];",
+        "};"
+      ],
+      "secrets": [
+        {
+          "path": "/var/lib/mosquitto/ha-password",
+          "desc": "MQTT password for the homeassistant user",
+          "cmd": "mkdir -p /var/lib/mosquitto && head -c18 /dev/urandom | base64 > /var/lib/mosquitto/ha-password && chmod 600 /var/lib/mosquitto/ha-password"
+        }
+      ]
+    },
+    {
+      "id": "zigbee2mqtt",
+      "name": "Zigbee2MQTT",
+      "cat": "home",
+      "glyph": "network",
+      "brand": "#f0ad4e",
+      "desc": "Bridges a Zigbee USB coordinator onto MQTT, no vendor hub required.",
+      "home": "https://www.zigbee2mqtt.io/",
+      "docs": "https://www.zigbee2mqtt.io/guide/getting-started/",
+      "opt": "services.zigbee2mqtt",
+      "web": true,
+      "webPort": 8081,
+      "ports": {
+        "tcp": [
+          8081
+        ],
+        "udp": []
+      },
+      "needs": [
+        "mosquitto"
+      ],
+      "nix": [
+        "services.zigbee2mqtt = {",
+        "  enable = true;",
+        "  settings = {",
+        "    homeassistant = true;",
+        "    permit_join = false;",
+        "    serial.port = \"/dev/ttyACM0\";",
+        "    mqtt.server = \"mqtt://localhost:1883\";",
+        "    frontend = { host = \"0.0.0.0\"; port = 8081; };",
+        "  };",
+        "};"
+      ],
+      "note": "Check the real device path with `ls -l /dev/serial/by-id/` and use that stable path instead of /dev/ttyACM0."
+    },
+    {
+      "id": "vaultwarden",
+      "name": "Vaultwarden",
+      "cat": "security",
+      "glyph": "key",
+      "brand": "#175ddc",
+      "desc": "Lightweight Bitwarden-compatible password server. Works with all the official clients.",
+      "home": "https://github.com/dani-garcia/vaultwarden",
+      "docs": "https://github.com/dani-garcia/vaultwarden/wiki",
+      "opt": "services.vaultwarden",
+      "web": true,
+      "webPort": 8222,
+      "ports": {
+        "tcp": [
+          8222
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.vaultwarden = {",
+        "  enable = true;",
+        "  config = {",
+        "    DOMAIN = \"https://@DOMAIN@\";",
+        "    ROCKET_ADDRESS = \"0.0.0.0\";",
+        "    ROCKET_PORT = 8222;",
+        "    SIGNUPS_ALLOWED = false;",
+        "    INVITATIONS_ALLOWED = true;",
+        "  };",
+        "  environmentFile = \"/var/lib/vaultwarden/env\";",
+        "};"
+      ],
+      "secrets": [
+        {
+          "path": "/var/lib/vaultwarden/env",
+          "desc": "ADMIN_TOKEN for the Vaultwarden admin page",
+          "cmd": "mkdir -p /var/lib/vaultwarden && echo \"ADMIN_TOKEN=$(head -c32 /dev/urandom | base64)\" > /var/lib/vaultwarden/env && chmod 600 /var/lib/vaultwarden/env"
+        }
+      ],
+      "note": "Vaultwarden must be served over HTTPS or the browser extensions refuse to connect. Put it behind the reverse proxy."
+    },
+    {
+      "id": "authelia",
+      "name": "Authelia",
+      "cat": "security",
+      "glyph": "lock",
+      "brand": "#0d47a1",
+      "desc": "Single sign-on and 2FA portal that sits in front of everything else.",
+      "home": "https://www.authelia.com/",
+      "docs": "https://www.authelia.com/configuration/prologue/introduction/",
+      "opt": "services.authelia.instances",
+      "web": true,
+      "webPort": 9091,
+      "ports": {
+        "tcp": [
+          9092
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.authelia.instances.main = {",
+        "  enable = true;",
+        "  secrets = {",
+        "    jwtSecretFile = \"/var/lib/authelia-main/jwt-secret\";",
+        "    storageEncryptionKeyFile = \"/var/lib/authelia-main/storage-key\";",
+        "  };",
+        "  settings = {",
+        "    theme = \"dark\";",
+        "    server.address = \"tcp://0.0.0.0:9092\";",
+        "    authentication_backend.file.path = \"/var/lib/authelia-main/users.yml\";",
+        "    session.cookies = [{ domain = \"@BASEDOMAIN@\"; authelia_url = \"https://auth.@BASEDOMAIN@\"; }];",
+        "    storage.local.path = \"/var/lib/authelia-main/db.sqlite3\";",
+        "    notifier.filesystem.filename = \"/var/lib/authelia-main/notification.txt\";",
+        "    access_control.default_policy = \"two_factor\";",
+        "  };",
+        "};"
+      ],
+      "secrets": [
+        {
+          "path": "/var/lib/authelia-main/jwt-secret",
+          "desc": "JWT signing secret",
+          "cmd": "mkdir -p /var/lib/authelia-main && head -c48 /dev/urandom | base64 > /var/lib/authelia-main/jwt-secret"
+        },
+        {
+          "path": "/var/lib/authelia-main/storage-key",
+          "desc": "Storage encryption key",
+          "cmd": "head -c48 /dev/urandom | base64 > /var/lib/authelia-main/storage-key"
+        },
+        {
+          "path": "/var/lib/authelia-main/users.yml",
+          "desc": "User database (see Authelia docs for the format)",
+          "cmd": "# see https://www.authelia.com/reference/guides/passwords/"
+        }
+      ]
+    },
+    {
+      "id": "searx",
+      "name": "SearXNG",
+      "cat": "productivity",
+      "glyph": "search",
+      "brand": "#3050ff",
+      "desc": "Meta search engine that queries others on your behalf and keeps no profile.",
+      "home": "https://docs.searxng.org/",
+      "docs": "https://docs.searxng.org/",
+      "opt": "services.searx",
+      "web": true,
+      "webPort": 8888,
+      "ports": {
+        "tcp": [
+          8888
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.searx = {",
+        "  enable = true;",
+        "  settings = {",
+        "    server = {",
+        "      port = 8888;",
+        "      bind_address = \"0.0.0.0\";",
+        "      secret_key = \"@SEARX_SECRET@\";",
+        "    };",
+        "    search.formats = [ \"html\" \"json\" ];",
+        "  };",
+        "};"
+      ],
+      "note": "Replace @SEARX_SECRET@ with the output of `head -c32 /dev/urandom | base64`, or move it into environmentFile."
+    },
+    {
+      "id": "miniflux",
+      "name": "Miniflux",
+      "cat": "productivity",
+      "glyph": "book",
+      "brand": "#1f2937",
+      "desc": "Minimalist RSS reader. One binary, one Postgres database, no JavaScript required.",
+      "home": "https://miniflux.app/",
+      "docs": "https://miniflux.app/docs/",
+      "opt": "services.miniflux",
+      "web": true,
+      "webPort": 8071,
+      "ports": {
+        "tcp": [
+          8071
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.miniflux = {",
+        "  enable = true;",
+        "  adminCredentialsFile = \"/var/lib/miniflux/admin\";",
+        "  config = {",
+        "    LISTEN_ADDR = \"0.0.0.0:8071\";",
+        "    BASE_URL = \"https://@DOMAIN@/\";",
+        "  };",
+        "};"
+      ],
+      "secrets": [
+        {
+          "path": "/var/lib/miniflux/admin",
+          "desc": "ADMIN_USERNAME and ADMIN_PASSWORD, one per line",
+          "cmd": "mkdir -p /var/lib/miniflux && printf 'ADMIN_USERNAME=admin\\nADMIN_PASSWORD=%s\\n' \"$(head -c18 /dev/urandom | base64)\" > /var/lib/miniflux/admin && chmod 600 /var/lib/miniflux/admin"
+        }
+      ]
+    },
+    {
+      "id": "vikunja",
+      "name": "Vikunja",
+      "cat": "productivity",
+      "glyph": "doc",
+      "brand": "#1973ff",
+      "desc": "To-do and project management with list, gantt and kanban views.",
+      "home": "https://vikunja.io/",
+      "docs": "https://vikunja.io/docs/",
+      "opt": "services.vikunja",
+      "web": true,
+      "webPort": 3456,
+      "ports": {
+        "tcp": [
+          3456
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.vikunja = {",
+        "  enable = true;",
+        "  frontendScheme = \"https\";",
+        "  frontendHostname = \"@DOMAIN@\";",
+        "  port = 3456;",
+        "};"
+      ]
+    },
+    {
+      "id": "hedgedoc",
+      "name": "HedgeDoc",
+      "cat": "productivity",
+      "glyph": "doc",
+      "brand": "#b51f08",
+      "desc": "Real-time collaborative markdown notes in the browser.",
+      "home": "https://hedgedoc.org/",
+      "docs": "https://docs.hedgedoc.org/",
+      "opt": "services.hedgedoc",
+      "web": true,
+      "webPort": 3040,
+      "ports": {
+        "tcp": [
+          3040
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.hedgedoc = {",
+        "  enable = true;",
+        "  settings = {",
+        "    domain = \"@DOMAIN@\";",
+        "    host = \"0.0.0.0\";",
+        "    port = 3040;",
+        "    protocolUseSSL = true;",
+        "    allowAnonymous = false;",
+        "  };",
+        "};"
+      ]
+    },
+    {
+      "id": "ntfy",
+      "name": "ntfy",
+      "cat": "productivity",
+      "glyph": "chat",
+      "brand": "#338574",
+      "desc": "Push notifications to your phone from a shell script or curl.",
+      "home": "https://ntfy.sh/",
+      "docs": "https://docs.ntfy.sh/",
+      "opt": "services.ntfy-sh",
+      "web": true,
+      "webPort": 2586,
+      "ports": {
+        "tcp": [
+          2586
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.ntfy-sh = {",
+        "  enable = true;",
+        "  settings = {",
+        "    listen-http = \":2586\";",
+        "    base-url = \"https://@DOMAIN@\";",
+        "    behind-proxy = true;",
+        "  };",
+        "};"
+      ]
+    },
+    {
+      "id": "homepage",
+      "name": "Homepage",
+      "cat": "productivity",
+      "glyph": "home",
+      "brand": "#0ea5e9",
+      "desc": "Dashboard that links to everything else you self-host, with live service widgets.",
+      "home": "https://gethomepage.dev/",
+      "docs": "https://gethomepage.dev/configs/",
+      "opt": "services.homepage-dashboard",
+      "web": true,
+      "webPort": 8082,
+      "ports": {
+        "tcp": [
+          8082
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.homepage-dashboard = {",
+        "  enable = true;",
+        "  listenPort = 8082;",
+        "  allowedHosts = \"@DOMAIN@,localhost:8082\";",
+        "};"
+      ]
+    },
+    {
+      "id": "ollama-srv",
+      "name": "Ollama",
+      "cat": "ai",
+      "glyph": "robot",
+      "brand": "#2b2b2b",
+      "desc": "Runs local language models and exposes an HTTP API on the network.",
+      "home": "https://ollama.com/",
+      "docs": "https://github.com/ollama/ollama/tree/main/docs",
+      "opt": "services.ollama",
+      "web": false,
+      "webPort": 11434,
+      "ports": {
+        "tcp": [
+          11434
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.ollama = {",
+        "  enable = true;",
+        "  host = \"0.0.0.0\";",
+        "  port = 11434;",
+        "};"
+      ],
+      "note": "Set services.ollama.acceleration to \"cuda\" or \"rocm\" to use the GPU. Without it everything runs on the CPU."
+    },
+    {
+      "id": "open-webui",
+      "name": "Open WebUI",
+      "cat": "ai",
+      "glyph": "robot",
+      "brand": "#1a1a1a",
+      "desc": "Chat interface for Ollama and OpenAI-compatible endpoints.",
+      "home": "https://openwebui.com/",
+      "docs": "https://docs.openwebui.com/",
+      "opt": "services.open-webui",
+      "web": true,
+      "webPort": 8072,
+      "needs": [
+        "ollama-srv"
+      ],
+      "ports": {
+        "tcp": [
+          8072
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.open-webui = {",
+        "  enable = true;",
+        "  host = \"0.0.0.0\";",
+        "  port = 8072;",
+        "  environment = {",
+        "    OLLAMA_BASE_URL = \"http://127.0.0.1:11434\";",
+        "    WEBUI_AUTH = \"True\";",
+        "  };",
+        "};"
+      ]
+    },
+    {
+      "id": "postgresql",
+      "name": "PostgreSQL",
+      "cat": "db",
+      "glyph": "database",
+      "brand": "#336791",
+      "desc": "The default relational database for most self-hosted software.",
+      "home": "https://www.postgresql.org/",
+      "docs": "https://wiki.nixos.org/wiki/PostgreSQL",
+      "opt": "services.postgresql",
+      "ports": {
+        "tcp": [],
+        "udp": []
+      },
+      "nix": [
+        "services.postgresql = {",
+        "  enable = true;",
+        "  enableTCPIP = false;",
+        "};"
+      ],
+      "note": "Left listening on the Unix socket only. Turn on enableTCPIP and open port 5432 if something off-box needs it."
+    },
+    {
+      "id": "mariadb",
+      "name": "MariaDB",
+      "cat": "db",
+      "glyph": "database",
+      "brand": "#c0765a",
+      "desc": "MySQL-compatible relational database.",
+      "home": "https://mariadb.org/",
+      "docs": "https://wiki.nixos.org/wiki/MySQL",
+      "opt": "services.mysql",
+      "ports": {
+        "tcp": [],
+        "udp": []
+      },
+      "nix": [
+        "services.mysql = {",
+        "  enable = true;",
+        "  package = pkgs.mariadb;",
+        "};"
+      ]
+    },
+    {
+      "id": "redis",
+      "name": "Redis",
+      "cat": "db",
+      "glyph": "database",
+      "brand": "#dc382d",
+      "desc": "In-memory key-value store used as a cache by many of these services.",
+      "home": "https://redis.io/",
+      "docs": "https://wiki.nixos.org/wiki/Redis",
+      "opt": "services.redis.servers",
+      "ports": {
+        "tcp": [],
+        "udp": []
+      },
+      "nix": [
+        "services.redis.servers.main = {",
+        "  enable = true;",
+        "  port = 6379;",
+        "  bind = \"127.0.0.1\";",
+        "};"
+      ]
+    },
+    {
+      "id": "minecraft",
+      "name": "Minecraft server",
+      "cat": "dev",
+      "glyph": "controller",
+      "brand": "#62b47a",
+      "unfree": true,
+      "desc": "Vanilla Minecraft server, declaratively configured.",
+      "home": "https://www.minecraft.net/",
+      "docs": "https://wiki.nixos.org/wiki/Minecraft_Server",
+      "opt": "services.minecraft-server",
+      "ports": {
+        "tcp": [
+          25565
+        ],
+        "udp": [
+          25565
+        ]
+      },
+      "nix": [
+        "services.minecraft-server = {",
+        "  enable = true;",
+        "  eula = true;",
+        "  openFirewall = true;",
+        "  declarative = true;",
+        "  serverProperties = {",
+        "    server-port = 25565;",
+        "    difficulty = \"normal\";",
+        "    gamemode = \"survival\";",
+        "    max-players = 10;",
+        "    motd = \"@HOSTNAME@\";",
+        "    white-list = true;",
+        "  };",
+        "};"
+      ],
+      "note": "Setting eula = true records that you accept Mojang's end user licence agreement."
+    },
+    {
+      "id": "printing",
+      "name": "CUPS printing",
+      "cat": "infra",
+      "glyph": "printer",
+      "brand": "#3f51b5",
+      "desc": "Printing, with driverless IPP discovery over the network.",
+      "home": "https://www.cups.org/",
+      "docs": "https://wiki.nixos.org/wiki/Printing",
+      "opt": "services.printing",
+      "ports": {
+        "tcp": [
+          631
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.printing = {",
+        "  enable = true;",
+        "  drivers = [ pkgs.gutenprint pkgs.hplip ];",
+        "};",
+        "services.avahi = {",
+        "  enable = true;",
+        "  nssmdns4 = true;",
+        "  openFirewall = true;",
+        "};"
+      ]
+    },
+    {
+      "id": "restic-backup",
+      "name": "restic backups",
+      "cat": "infra",
+      "glyph": "cloud",
+      "brand": "#0b7285",
+      "desc": "Nightly encrypted, deduplicated backups of the directories you care about.",
+      "home": "https://restic.net/",
+      "docs": "https://restic.readthedocs.io/",
+      "opt": "services.restic.backups",
+      "ports": {
+        "tcp": [],
+        "udp": []
+      },
+      "nix": [
+        "services.restic.backups.daily = {",
+        "  initialize = true;",
+        "  repository = \"/srv/backups/restic\";",
+        "  passwordFile = \"/var/lib/restic/password\";",
+        "  paths = [ \"/home\" \"/var/lib\" \"/etc/nixos\" ];",
+        "  exclude = [ \"/home/*/.cache\" \"/var/lib/docker\" ];",
+        "  timerConfig = {",
+        "    OnCalendar = \"daily\";",
+        "    Persistent = true;",
+        "    RandomizedDelaySec = \"1h\";",
+        "  };",
+        "  pruneOpts = [ \"--keep-daily 7\" \"--keep-weekly 4\" \"--keep-monthly 6\" ];",
+        "};"
+      ],
+      "secrets": [
+        {
+          "path": "/var/lib/restic/password",
+          "desc": "Repository encryption password - if you lose this the backups are unreadable",
+          "cmd": "mkdir -p /var/lib/restic && head -c32 /dev/urandom | base64 > /var/lib/restic/password && chmod 600 /var/lib/restic/password"
+        }
+      ],
+      "note": "A backup on the same machine is not a backup. Point the repository at another host, or an S3/B2 bucket."
+    },
+    {
+      "id": "avahi",
+      "name": "Avahi / mDNS",
+      "cat": "infra",
+      "glyph": "network",
+      "brand": "#795548",
+      "desc": "Makes the machine reachable as hostname.local and finds other devices on the LAN.",
+      "home": "https://avahi.org/",
+      "docs": "https://wiki.nixos.org/wiki/Avahi",
+      "opt": "services.avahi",
+      "ports": {
+        "tcp": [],
+        "udp": [
+          5353
+        ]
+      },
+      "nix": [
+        "services.avahi = {",
+        "  enable = true;",
+        "  nssmdns4 = true;",
+        "  openFirewall = true;",
+        "  publish = {",
+        "    enable = true;",
+        "    addresses = true;",
+        "    workstation = true;",
+        "  };",
+        "};"
+      ]
+    },
+    {
+      "id": "deluge",
+      "name": "Deluge",
+      "cat": "arr",
+      "glyph": "download",
+      "brand": "#599fd8",
+      "desc": "BitTorrent client with a separate web UI daemon.",
+      "home": "https://deluge-torrent.org/",
+      "docs": "https://deluge.readthedocs.io/",
+      "opt": "services.deluge",
+      "web": true,
+      "webPort": 8112,
+      "ports": {
+        "tcp": [
+          8112,
+          6881
+        ],
+        "udp": [
+          6881
+        ]
+      },
+      "nix": [
+        "services.deluge = {",
+        "  enable = true;",
+        "  group = \"media\";",
+        "  web = {",
+        "    enable = true;",
+        "    port = 8112;",
+        "  };",
+        "};"
+      ],
+      "needsGroup": "media",
+      "conflicts": [
+        "transmission"
+      ]
+    },
+    {
+      "id": "gotify",
+      "name": "Gotify",
+      "cat": "productivity",
+      "glyph": "chat",
+      "brand": "#17a2b8",
+      "desc": "Simple self-hosted push notification server with an Android app.",
+      "home": "https://gotify.net/",
+      "docs": "https://gotify.net/docs/",
+      "opt": "services.gotify",
+      "web": true,
+      "webPort": 8070,
+      "ports": {
+        "tcp": [
+          8070
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.gotify = {",
+        "  enable = true;",
+        "  environment = {",
+        "    GOTIFY_SERVER_PORT = 8070;",
+        "  };",
+        "};"
+      ],
+      "note": "First login is admin / admin. Change it immediately."
+    },
+    {
+      "id": "freshrss",
+      "name": "FreshRSS",
+      "cat": "productivity",
+      "glyph": "book",
+      "brand": "#ff8c00",
+      "desc": "Fast, self-hosted RSS aggregator with a mobile-friendly reader.",
+      "home": "https://freshrss.org/",
+      "docs": "https://freshrss.github.io/FreshRSS/",
+      "opt": "services.freshrss",
+      "web": true,
+      "webPort": 80,
+      "ownsHttp": true,
+      "ports": {
+        "tcp": [
+          80
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.freshrss = {",
+        "  enable = true;",
+        "  baseUrl = \"https://@DOMAIN@\";",
+        "  virtualHost = \"@DOMAIN@\";",
+        "  defaultUser = \"admin\";",
+        "  passwordFile = \"/var/lib/freshrss/password\";",
+        "};"
+      ],
+      "secrets": [
+        {
+          "path": "/var/lib/freshrss/password",
+          "desc": "FreshRSS admin password",
+          "cmd": "mkdir -p /var/lib/freshrss && head -c18 /dev/urandom | base64 > /var/lib/freshrss/password && chmod 600 /var/lib/freshrss/password"
+        }
+      ],
+      "provides": [
+        "nginx"
+      ],
+      "note": "This module sets up its own nginx virtual host, so it wants to own port 80."
+    },
+    {
+      "id": "mealie",
+      "name": "Mealie",
+      "cat": "productivity",
+      "glyph": "book",
+      "brand": "#e58325",
+      "desc": "Recipe manager and meal planner that can import recipes from a URL.",
+      "home": "https://mealie.io/",
+      "docs": "https://docs.mealie.io/",
+      "opt": "services.mealie",
+      "web": true,
+      "webPort": 9000,
+      "ports": {
+        "tcp": [
+          9000
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.mealie = {",
+        "  enable = true;",
+        "  listenAddress = \"0.0.0.0\";",
+        "  port = 9000;",
+        "  settings = {",
+        "    ALLOW_SIGNUP = \"false\";",
+        "    TZ = \"@TIMEZONE@\";",
+        "  };",
+        "};"
+      ]
+    },
+    {
+      "id": "actual",
+      "name": "Actual Budget",
+      "cat": "productivity",
+      "glyph": "chart",
+      "brand": "#7952b3",
+      "desc": "Local-first envelope budgeting with end-to-end encrypted sync.",
+      "home": "https://actualbudget.org/",
+      "docs": "https://actualbudget.org/docs/",
+      "opt": "services.actual",
+      "web": true,
+      "webPort": 5006,
+      "ports": {
+        "tcp": [
+          5006
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.actual = {",
+        "  enable = true;",
+        "  settings = {",
+        "    hostname = \"0.0.0.0\";",
+        "    port = 5006;",
+        "  };",
+        "};"
+      ]
+    },
+    {
+      "id": "stirling-pdf",
+      "name": "Stirling PDF",
+      "cat": "productivity",
+      "glyph": "doc",
+      "brand": "#dc3545",
+      "desc": "Local web toolkit for splitting, merging, OCR-ing and converting PDFs.",
+      "home": "https://stirlingpdf.com/",
+      "docs": "https://docs.stirlingpdf.com/",
+      "opt": "services.stirling-pdf",
+      "web": true,
+      "webPort": 8081,
+      "ports": {
+        "tcp": [
+          8081
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.stirling-pdf = {",
+        "  enable = true;",
+        "  environment = {",
+        "    SERVER_PORT = 8081;",
+        "    SERVER_HOST = \"0.0.0.0\";",
+        "  };",
+        "};"
+      ]
+    },
+    {
+      "id": "n8n",
+      "name": "n8n",
+      "cat": "dev",
+      "glyph": "cog",
+      "brand": "#ea4b71",
+      "desc": "Visual workflow automation - connect APIs together without writing glue code.",
+      "home": "https://n8n.io/",
+      "docs": "https://docs.n8n.io/",
+      "opt": "services.n8n",
+      "web": true,
+      "webPort": 5678,
+      "ports": {
+        "tcp": [
+          5678
+        ],
+        "udp": []
+      },
+      "nix": [
+        "services.n8n = {",
+        "  enable = true;",
+        "  openFirewall = false;",
+        "  settings = {",
+        "    listen_address = \"0.0.0.0\";",
+        "    port = 5678;",
+        "  };",
+        "};"
+      ]
+    }
+  ]
+}

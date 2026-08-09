@@ -1,0 +1,247 @@
+{
+  "$comment": "Prebuilt starting points. Applying a bundle merges 'patch' into the current state; nothing is locked afterwards, every choice stays editable.",
+  "items": [
+    {
+      "id": "minimal-server",
+      "name": "Minimal Server",
+      "glyph": "server",
+      "brand": "#64748b",
+      "tagline": "SSH and nothing else",
+      "desc": "The smallest useful headless install. Firewall on, key-only SSH, a handful of diagnostic tools.",
+      "patch": {
+        "profile": "server",
+        "desktop": "none",
+        "gpu": "none",
+        "swap": "zram",
+        "security": "baseline",
+        "packages": ["git", "htop", "btop", "ncdu", "ripgrep", "curl", "wget", "tmux", "fastfetch"],
+        "services": [],
+        "options": { "ssh": true }
+      }
+    },
+    {
+      "id": "homelab",
+      "name": "Homelab Hub",
+      "glyph": "cloud",
+      "brand": "#0ea5e9",
+      "tagline": "Reverse proxy, passwords, dashboards, backups",
+      "desc": "The core of a self-hosted setup: Caddy with automatic HTTPS in front, Vaultwarden for passwords, a dashboard, monitoring and nightly restic backups.",
+      "patch": {
+        "profile": "server",
+        "desktop": "none",
+        "gpu": "none",
+        "swap": "zram",
+        "security": "baseline",
+        "packages": ["git", "btop", "ncdu", "restic", "rsync", "lazydocker", "docker"],
+        "services": ["caddy", "vaultwarden", "homepage", "uptime-kuma", "restic-backup", "adguardhome", "avahi"],
+        "options": { "ssh": true, "reverseProxy": true }
+      }
+    },
+    {
+      "id": "media-server",
+      "name": "Home Media Server",
+      "glyph": "tv",
+      "brand": "#00a4dc",
+      "tagline": "Jellyfin and the full *arr stack",
+      "desc": "Jellyfin for playback, Sonarr, Radarr, Prowlarr and Bazarr for automation, Transmission for transfers, all sharing one media group.",
+      "patch": {
+        "profile": "server",
+        "desktop": "none",
+        "gpu": "intel",
+        "swap": "zram",
+        "security": "baseline",
+        "packages": ["git", "btop", "ncdu", "ffmpeg", "rsync"],
+        "services": ["jellyfin", "sonarr", "radarr", "prowlarr", "bazarr", "transmission", "samba", "avahi"],
+        "options": { "ssh": true, "hwAccel": true }
+      }
+    },
+    {
+      "id": "nas",
+      "name": "NAS / File Server",
+      "glyph": "disk",
+      "brand": "#0891d1",
+      "tagline": "Shares, sync and snapshots",
+      "desc": "Samba and NFS shares, Syncthing for device sync, Btrfs scrubbing and encrypted nightly backups.",
+      "patch": {
+        "profile": "server",
+        "desktop": "none",
+        "gpu": "none",
+        "filesystem": "btrfs",
+        "swap": "zram",
+        "security": "baseline",
+        "packages": ["git", "btop", "ncdu", "smartmontools", "rsync", "restic"],
+        "services": ["samba", "nfs", "syncthing", "restic-backup", "avahi"],
+        "options": { "ssh": true }
+      }
+    },
+    {
+      "id": "dev-workstation",
+      "name": "Developer Workstation",
+      "glyph": "code",
+      "brand": "#7c3aed",
+      "tagline": "GNOME, containers, toolchains",
+      "desc": "A full desktop with editors, container tooling, direnv and the common language runtimes.",
+      "patch": {
+        "profile": "desktop",
+        "desktop": "gnome",
+        "gpu": "intel",
+        "swap": "zram",
+        "security": "baseline",
+        "packages": [
+          "firefox", "vscodium", "neovim", "ghostty", "git", "gh", "lazygit", "direnv",
+          "docker", "distrobox", "ripgrep", "fd", "fzf", "bat", "eza", "jq", "btop",
+          "python3", "nodejs", "go", "rustup", "gcc", "just", "nh", "nix-output-monitor",
+          "nerd-fonts", "noto-fonts", "noto-fonts-emoji", "zsh", "starship", "keepassxc"
+        ],
+        "services": ["postgresql", "avahi"],
+        "flakes": ["home-manager", "nix-index-database"],
+        "options": { "ssh": true, "flatpak": true }
+      }
+    },
+    {
+      "id": "gaming-rig",
+      "name": "Gaming Rig",
+      "glyph": "controller",
+      "brand": "#ef4444",
+      "tagline": "Plasma, Steam, Proton, NVIDIA",
+      "desc": "KDE Plasma with Steam, Gamescope, GameMode and MangoHud, 32-bit graphics enabled and security kept out of the way.",
+      "patch": {
+        "profile": "desktop",
+        "desktop": "plasma6",
+        "gpu": "nvidia",
+        "swap": "zram",
+        "security": "relaxed",
+        "packages": [
+          "steam", "lutris", "heroic", "bottles", "wine", "mangohud", "gamemode",
+          "gamescope", "protonup-qt", "prismlauncher", "discord", "firefox",
+          "obs-studio", "btop", "nvtopPackages.full", "nerd-fonts", "noto-fonts-emoji"
+        ],
+        "services": [],
+        "options": { "gaming": true }
+      }
+    },
+    {
+      "id": "hyprland-rice",
+      "name": "Hyprland Rice",
+      "glyph": "tiling",
+      "brand": "#00aaae",
+      "tagline": "Wayland tiling, greetd, ready to theme",
+      "desc": "Hyprland with Waybar, wofi, kitty and the screenshot and lock tooling, plus Stylix and Home Manager to theme it.",
+      "patch": {
+        "profile": "desktop",
+        "desktop": "hyprland",
+        "loginManager": "greetd",
+        "gpu": "amd",
+        "swap": "zram",
+        "security": "relaxed",
+        "packages": [
+          "firefox", "neovim", "kitty", "git", "btop", "ripgrep", "fd", "fzf", "bat",
+          "eza", "zoxide", "starship", "zsh", "mpv", "imagemagick", "nerd-fonts",
+          "noto-fonts", "noto-fonts-emoji", "keepassxc"
+        ],
+        "services": [],
+        "flakes": ["home-manager", "stylix"],
+        "options": {}
+      }
+    },
+    {
+      "id": "privacy",
+      "name": "Privacy Workstation",
+      "glyph": "shield",
+      "brand": "#7d4698",
+      "tagline": "Hardened, sandboxed, encrypted DNS",
+      "desc": "A hardened desktop: AppArmor, kernel hardening, Firejail sandboxing, DNS over TLS, Tor and an offline password manager.",
+      "patch": {
+        "profile": "desktop",
+        "desktop": "gnome",
+        "gpu": "intel",
+        "swap": "zram",
+        "security": "hardened",
+        "packages": [
+          "librewolf", "tor-browser", "keepassxc", "gnupg", "age", "veracrypt",
+          "signal-desktop", "element-desktop", "thunderbird", "libreoffice",
+          "btop", "nerd-fonts", "noto-fonts"
+        ],
+        "services": [],
+        "options": { "ssh": false }
+      }
+    },
+    {
+      "id": "htpc",
+      "name": "Living Room HTPC",
+      "glyph": "tv",
+      "brand": "#17b2e7",
+      "tagline": "Boots straight into Kodi",
+      "desc": "A TV-attached box that auto-logs in, runs Kodi, plays anything and never goes to sleep halfway through a film.",
+      "patch": {
+        "profile": "htpc",
+        "desktop": "xfce",
+        "gpu": "amd",
+        "swap": "zram",
+        "security": "relaxed",
+        "packages": ["kodi", "mpv", "vlc", "ffmpeg", "firefox", "moonlight-qt"],
+        "services": ["avahi", "jellyfin"],
+        "options": { "autoLogin": true, "ssh": true, "hwAccel": true }
+      }
+    },
+    {
+      "id": "smart-home",
+      "name": "Smart Home Hub",
+      "glyph": "home",
+      "brand": "#41bdf5",
+      "tagline": "Home Assistant, MQTT, Zigbee",
+      "desc": "Home Assistant with a Mosquitto broker and Zigbee2MQTT, so devices talk to your box instead of a vendor cloud.",
+      "patch": {
+        "profile": "server",
+        "desktop": "none",
+        "gpu": "none",
+        "swap": "zram",
+        "security": "baseline",
+        "packages": ["git", "btop", "ncdu"],
+        "services": ["home-assistant", "mosquitto", "zigbee2mqtt", "ntfy", "avahi", "restic-backup"],
+        "options": { "ssh": true }
+      }
+    },
+    {
+      "id": "ai-box",
+      "name": "Local AI Box",
+      "glyph": "robot",
+      "brand": "#2b2b2b",
+      "tagline": "Ollama with a chat front end",
+      "desc": "Ollama serving models on the network with Open WebUI in front, plus the NVIDIA driver for GPU acceleration.",
+      "patch": {
+        "profile": "server",
+        "desktop": "none",
+        "gpu": "nvidia",
+        "swap": "zram",
+        "security": "baseline",
+        "packages": ["git", "btop", "nvtopPackages.full", "python3"],
+        "services": ["ollama-srv", "open-webui", "caddy"],
+        "options": { "ssh": true, "reverseProxy": true }
+      }
+    },
+    {
+      "id": "laptop",
+      "name": "Everyday Laptop",
+      "glyph": "cpu",
+      "brand": "#22c55e",
+      "tagline": "Battery life, wifi, printing, office",
+      "desc": "A balanced laptop setup: GNOME, power management, Bluetooth, printing and the usual desktop applications.",
+      "patch": {
+        "profile": "laptop",
+        "desktop": "gnome",
+        "gpu": "intel",
+        "swap": "zram",
+        "security": "baseline",
+        "packages": [
+          "firefox", "thunderbird", "libreoffice", "vlc", "gimp", "keepassxc",
+          "signal-desktop", "obsidian", "btop", "powertop", "nerd-fonts",
+          "noto-fonts", "noto-fonts-emoji", "liberation"
+        ],
+        "services": ["printing", "avahi"],
+        "flakes": ["nixos-hardware"],
+        "options": { "flatpak": true, "bluetooth": true }
+      }
+    }
+  ]
+}
