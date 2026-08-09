@@ -43,9 +43,16 @@ export async function buildPayload(files) {
   return packed && packed.length < raw.length ? "1" + b64url(packed) : "0" + b64url(raw);
 }
 
-/** Where get.txt lives, derived from wherever the page is being served. */
+/**
+ * Where get.txt lives, derived from wherever the page is being served. The
+ * standalone build has no directory to sit in, so it carries an override, and
+ * a page opened straight off disk gets a placeholder rather than a file:// URL
+ * that curl could never fetch.
+ */
 export function installerUrl() {
-  const { origin, pathname } = window.location;
+  if (globalThis.__BASELAYER_INSTALLER) return globalThis.__BASELAYER_INSTALLER;
+  const { origin, pathname, protocol } = window.location;
+  if (protocol === "file:") return "https://YOUR-SITE.neocities.org/get.txt";
   const dir = pathname.replace(/[^/]*$/, "");
   return `${origin}${dir}get.txt`;
 }

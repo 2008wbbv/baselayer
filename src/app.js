@@ -38,19 +38,26 @@ let payloadToken = 0;
 
 const $ = (sel) => document.querySelector(sel);
 
+async function loadCatalog() {
+  const loaded = await Promise.all(
+    DATA_FILES.map((f) =>
+      fetch(`data/${f}.json`).then((r) => {
+        if (!r.ok) throw new Error(`data/${f}.json returned ${r.status}`);
+        return r.json();
+      })),
+  );
+  cat = Object.fromEntries(DATA_FILES.map((f, i) => [f, loaded[i]]));
+}
+
 // ------------------------------------------------------------------ bootstrap
 
 async function boot() {
   try {
-    const loaded = await Promise.all(
-      DATA_FILES.map((f) =>
-        fetch(`data/${f}.json`).then((r) => {
-          if (!r.ok) throw new Error(`data/${f}.json returned ${r.status}`);
-          return r.json();
-        })),
-    );
-    cat = Object.fromEntries(DATA_FILES.map((f, i) => [f, loaded[i]]));
+    // The standalone single-file build inlines the catalog instead of fetching it.
+    if (globalThis.__BASELAYER_DATA) cat = globalThis.__BASELAYER_DATA;
+    else await loadCatalog();
   } catch (e) {
+
     $("#boot").innerHTML = `<div class="notice error" style="text-align:left">
       <span class="ico">${svg("shield", { size: 18 })}</span>
       <div><b>Could not load the catalog</b><p>${ui.esc(e.message)}</p>

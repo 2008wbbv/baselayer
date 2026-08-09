@@ -1,0 +1,16 @@
+{
+  "name": "baselayer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Build a NixOS configuration in the browser. Static site, no backend.",
+  "type": "module",
+  "scripts": {
+    "serve": "python3 -m http.server 8137",
+    "test": "node tools/test.mjs",
+    "test:online": "node tools/test.mjs --online",
+    "verify": "node tools/verify-catalog.mjs",
+    "browser": "node tools/browser-check.mjs",
+    "bundle": "node tools/bundle.mjs baselayer-standalone.html"
+  },
+  "license": "MIT"
+}
