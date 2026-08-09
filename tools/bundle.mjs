@@ -78,18 +78,54 @@ const script = ordered.map((name) => {
 const css = readFileSync(join(ROOT, "assets", "style.css"), "utf8");
 const data = Object.fromEntries(DATA.map((f) => [f, JSON.parse(readFileSync(join(ROOT, "data", `${f}.json`), "utf8"))]));
 
-const html = readFileSync(join(ROOT, "index.html"), "utf8")
+const inlineScript = [
+  "<script>",
+  `window.__BASELAYER_DATA = ${JSON.stringify(data)};`,
+  'window.__BASELAYER_INSTALLER = "https://YOUR-SITE.neocities.org/get.txt";',
+  "const __m = {};",
+  script,
+  "</script>",
+].join("\n");
+
+let html = readFileSync(join(ROOT, "index.html"), "utf8")
   .replace('<link rel="stylesheet" href="assets/style.css">', `<style>\n${css}\n</style>`)
-  .replace('<script type="module" src="src/app.js"></script>', [
-    "<script>",
-    `window.__BASELAYER_DATA = ${JSON.stringify(data)};`,
-    'window.__BASELAYER_INSTALLER = "https://YOUR-SITE.neocities.org/get.txt";',
-    "const __m = {};",
-    script,
-    "</script>",
-  ].join("\n"))
+  .replace('<script type="module" src="src/app.js"></script>', inlineScript)
   .replace("<title>baselayer - build a NixOS configuration</title>",
     "<title>baselayer - build a NixOS configuration (standalone)</title>");
+
+// Artifact hosts wrap the file in their own document skeleton, so emit the
+// page content only, plus a note about what a hosted preview cannot do.
+if (process.argv.includes("--artifact")) {
+  const styleTag = html.match(/<style>[\s\S]*?<\/style>/)[0];
+  const body = html.match(/<body>([\s\S]*)<\/body>/)[1];
+  const notice = `
+<div class="preview-note" id="preview-note">
+  <span><b>Preview.</b> Two things only work from your own deployment: live nixpkgs
+  search needs a network request this page is not allowed to make, so it falls back
+  to the built-in catalog; and the <code>curl</code> command points at a placeholder
+  host until <code>get.txt</code> is served next to the page.</span>
+  <button type="button" onclick="document.getElementById('preview-note').remove()"
+    aria-label="Dismiss">&times;</button>
+</div>`;
+  const noticeCss = `
+.preview-note {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 10px 18px; font-size: .84rem; line-height: 1.5;
+  background: var(--accent-soft); color: var(--ink-dim);
+  border-bottom: 1px solid var(--line);
+}
+.preview-note b { color: var(--ink); font-weight: 600; }
+.preview-note code { background: var(--sunken); padding: 1px 5px; border-radius: 4px; }
+.preview-note button {
+  margin-left: auto; flex: none; border: 0; background: none; cursor: pointer;
+  color: var(--ink-faint); font-size: 1.1rem; line-height: 1; padding: 2px 4px;
+}
+.preview-note button:hover { color: var(--ink); }
+`;
+  html = "<title>baselayer - build a NixOS configuration</title>\n"
+    + styleTag.replace("</style>", noticeCss + "</style>")
+    + "\n" + notice + body.replace(styleTag, "");
+}
 
 writeFileSync(OUT, html);
 const kb = (Buffer.byteLength(html) / 1024).toFixed(0);
